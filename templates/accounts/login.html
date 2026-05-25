@@ -1,0 +1,575 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign In — BHEL SAP Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      background: #0d1f3c;
+      overflow: hidden;
+    }
+
+    /* ════════════════════════════
+       LEFT PANEL
+    ════════════════════════════ */
+    .login-left {
+      width: 46%;
+      flex-shrink: 0;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2.5rem;
+      overflow: hidden;
+      background: #0d1f3c;
+    }
+
+    /* Subtle geometric background rings */
+    .left-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.06);
+      pointer-events: none;
+    }
+    .left-ring-1 { width: 520px; height: 520px; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+    .left-ring-2 { width: 380px; height: 380px; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+    .left-ring-3 { width: 240px; height: 240px; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+
+    /* Soft glow behind logo */
+    .left-glow {
+      position: absolute;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(26,86,219,0.18) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    /* Corner accent dots */
+    .left-dot {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.07);
+    }
+    .left-dot-1 { width: 80px; height: 80px; top: -20px; right: -20px; }
+    .left-dot-2 { width: 50px; height: 50px; bottom: 40px; left: -15px; }
+    .left-dot-3 { width: 20px; height: 20px; top: 30%; left: 8%; }
+    .left-dot-4 { width: 12px; height: 12px; bottom: 20%; right: 10%; }
+
+    /* Thin vertical line accent */
+    .left-line {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: linear-gradient(to bottom, transparent, #1a56db, transparent);
+      opacity: 0.6;
+    }
+
+    .left-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .bhel-logo-wrap {
+      width: 110px; height: 110px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.4rem;
+      padding: 10px;
+    }
+
+    .bhel-logo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .bhel-fullform {
+      color: rgba(255,255,255,0.5);
+      font-size: .72rem;
+      font-weight: 500;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-bottom: .5rem;
+    }
+
+    .bhel-name {
+      color: #fff;
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Thin divider */
+    .left-divider {
+      width: 40px;
+      height: 2px;
+      background: #1a56db;
+      border-radius: 2px;
+      margin-bottom: 1.5rem;
+      opacity: 0.8;
+    }
+
+    .left-tagline {
+      color: rgba(255,255,255,0.6);
+      font-size: .88rem;
+      font-weight: 400;
+      line-height: 1.65;
+      max-width: 260px;
+    }
+
+    /* Bottom badge */
+    .left-badge {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: .35rem .9rem;
+      white-space: nowrap;
+    }
+
+    .left-badge span {
+      font-size: .7rem;
+      color: rgba(255,255,255,0.45);
+    }
+
+    .left-badge i {
+      font-size: .75rem;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* ════════════════════════════
+       RIGHT PANEL
+    ════════════════════════════ */
+    .login-right {
+      flex: 1;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.75rem;
+      overflow-y: auto;
+    }
+
+    /* Card boundary */
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 2rem 2rem 1.75rem;
+    }
+
+    .login-card h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: .25rem;
+    }
+
+    .login-card .subtitle {
+      color: #64748b;
+      font-size: .83rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Role badges */
+    .role-badges {
+      display: flex;
+      gap: .45rem;
+      margin-bottom: .4rem;
+    }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      padding: .32rem .75rem;
+      border-radius: 20px;
+      font-size: .76rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1.5px solid #e2e8f0;
+      background: #f8fafc;
+      color: #64748b;
+      transition: all .18s;
+      user-select: none;
+    }
+
+    .role-badge.active {
+      border-color: #1a56db;
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .role-badge:hover:not(.active) {
+      border-color: #93c5fd;
+      color: #3b82f6;
+    }
+
+    .role-hint {
+      font-size: .71rem;
+      color: #94a3b8;
+      margin-bottom: 1.3rem;
+    }
+
+    /* Django messages — moved to top of card, styled as inline alert */
+    .msg-alert {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .55rem .8rem;
+      border-radius: 8px;
+      font-size: .8rem;
+      margin-bottom: 1rem;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+    }
+
+    .msg-alert.info    { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
+    .msg-alert.warning { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+    .msg-alert.error   { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+
+    /* Form labels */
+    .form-label {
+      display: block;
+      font-size: .79rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: .3rem;
+    }
+
+    .field-wrap {
+      position: relative;
+      margin-bottom: .9rem;
+    }
+
+    .field-wrap .f-icon {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      font-size: .95rem;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .field-wrap .toggle-btn {
+      position: absolute;
+      right: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      font-size: .95rem;
+      line-height: 1;
+      z-index: 2;
+    }
+
+    .field-wrap .toggle-btn:hover { color: #475569; }
+
+    .field-wrap input {
+      width: 100%;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      padding: .65rem .9rem .65rem 2.25rem;
+      font-size: .855rem;
+      font-family: 'Inter', sans-serif;
+      color: #0f172a;
+      background: #fff;
+      outline: none;
+      transition: border-color .18s, box-shadow .18s;
+    }
+
+    .field-wrap input:focus {
+      border-color: #1a56db;
+      box-shadow: 0 0 0 3px rgba(26,86,219,.09);
+    }
+
+    .field-wrap.has-toggle input { padding-right: 2.25rem; }
+
+    .label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: .3rem;
+    }
+
+    .forgot-link {
+      font-size: .76rem;
+      color: #1a56db;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .forgot-link:hover { text-decoration: underline; }
+
+    .remember-row {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .remember-row input[type="checkbox"] {
+      width: 15px; height: 15px;
+      accent-color: #1a56db;
+      cursor: pointer;
+    }
+
+    .remember-row label {
+      font-size: .81rem;
+      color: #4b5563;
+      cursor: pointer;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: .75rem;
+      background: #1a56db;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: .9rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: background .18s, transform .1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .4rem;
+    }
+
+    .btn-login:hover { background: #1645b8; transform: translateY(-1px); }
+    .btn-login:active { transform: translateY(0); }
+
+    .card-divider {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin: 1.1rem 0;
+      color: #cbd5e1;
+      font-size: .76rem;
+    }
+
+    .card-divider::before, .card-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e5e7eb;
+    }
+
+    .register-link {
+      text-align: center;
+      font-size: .81rem;
+      color: #64748b;
+    }
+
+    .register-link a {
+      color: #1a56db;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .register-link a:hover { text-decoration: underline; }
+
+    .error-alert {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+      border-radius: 8px;
+      padding: .6rem .85rem;
+      font-size: .8rem;
+      margin-bottom: .9rem;
+      display: flex;
+      align-items: flex-start;
+      gap: .4rem;
+    }
+
+    .field-error {
+      font-size: .72rem;
+      color: #dc2626;
+      margin-top: .2rem;
+      margin-bottom: .2rem;
+    }
+
+    @media (max-width: 768px) {
+      body { overflow: auto; background: #f1f5f9; }
+      .login-left { display: none; }
+      .login-right { padding: 2rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════ LEFT: Branding ════ -->
+<div class="login-left">
+  <!-- Decorative elements -->
+  <div class="left-ring left-ring-1"></div>
+  <div class="left-ring left-ring-2"></div>
+  <div class="left-ring left-ring-3"></div>
+  <div class="left-glow"></div>
+  <div class="left-dot left-dot-1"></div>
+  <div class="left-dot left-dot-2"></div>
+  <div class="left-dot left-dot-3"></div>
+  <div class="left-dot left-dot-4"></div>
+  <div class="left-line"></div>
+
+  <div class="left-content">
+    <div class="bhel-logo-wrap">
+      <img src="{% static 'images/bhel_logo.png' %}" alt="BHEL Logo" />
+    </div>
+    <p class="bhel-fullform">Bharat Heavy Electricals Limited</p>
+    <h1 class="bhel-name">BHEL</h1>
+    <div class="left-divider"></div>
+    <p class="left-tagline">Informative system on SAP business processes</p>
+  </div>
+
+  <div class="left-badge">
+    <i class="bi bi-shield-check"></i>
+    <span>Internal portal &mdash; authorized use only</span>
+  </div>
+</div>
+
+<!-- ════ RIGHT: Form ════ -->
+<div class="login-right">
+  <div class="login-card">
+
+    <h2>Welcome back</h2>
+    <p class="subtitle">Sign in to your BHEL SAP Portal account</p>
+
+ 
+
+    <!-- Django messages — properly styled, dismissible -->
+    {% if messages %}
+      {% for message in messages %}
+      <div class="msg-alert {{ message.tags }}">
+        <i class="bi bi-{% if 'error' in message.tags %}exclamation-circle{% elif 'warning' in message.tags %}exclamation-triangle{% else %}info-circle{% endif %}"></i>
+        {{ message }}
+      </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Non-field form errors -->
+    {% if form.non_field_errors %}
+    <div class="error-alert">
+      <i class="bi bi-exclamation-circle-fill" style="flex-shrink:0;margin-top:1px;"></i>
+      <span>{% for err in form.non_field_errors %}{{ err }}{% endfor %}</span>
+    </div>
+    {% endif %}
+
+    <form method="POST" autocomplete="on" novalidate>
+      {% csrf_token %}
+
+      <!-- Username -->
+      <div>
+        <label class="form-label" for="{{ form.username.id_for_label }}">Employee ID / Username</label>
+        <div class="field-wrap">
+          <i class="bi bi-person f-icon"></i>
+          {{ form.username }}
+        </div>
+        {% if form.username.errors %}
+        <div class="field-error">{{ form.username.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Password -->
+      <div>
+        <div class="label-row">
+          <label class="form-label mb-0" for="id_password">Password</label>
+          <a href="{% url 'accounts:forgot_password' %}" class="forgot-link">Forgot password?</a>
+        </div>
+        <div class="field-wrap has-toggle">
+          <i class="bi bi-lock f-icon"></i>
+          {{ form.password }}
+          <button type="button" class="toggle-btn" onclick="togglePwd(this)" aria-label="Toggle password">
+            <i class="bi bi-eye"></i>
+          </button>
+        </div>
+        {% if form.password.errors %}
+        <div class="field-error">{{ form.password.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Remember me -->
+      <div class="remember-row">
+        <input type="checkbox" id="rememberMe" name="remember">
+        <label for="rememberMe">Keep me signed in</label>
+      </div>
+
+      <button type="submit" class="btn-login">
+        <i class="bi bi-box-arrow-in-right"></i> Sign In
+      </button>
+    </form>
+
+    <div class="card-divider">or</div>
+
+    <div class="register-link">
+      Don't have an account? <a href="{% url 'accounts:register' %}">Register here</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function setRole(el) {
+    document.querySelectorAll('.role-badge').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function togglePwd(btn) {
+    const input = btn.closest('.field-wrap').querySelector('input');
+    const icon  = btn.querySelector('i');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.className = 'bi bi-eye-slash';
+    } else {
+      input.type = 'password';
+      icon.className = 'bi bi-eye';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const u = document.querySelector('[name="username"]');
+    const p = document.querySelector('[name="password"]');
+    if (u) u.placeholder = 'Enter your Employee ID or username';
+    if (p) p.placeholder = 'Enter your password';
+  });
+</script>
+</body>
+</html>

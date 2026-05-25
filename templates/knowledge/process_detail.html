@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% block title %}{{ process.title }} — BHEL SAP Portal{% endblock %}
+{% block content %}
+<div class="p-4">
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb small">
+      <li class="breadcrumb-item"><a href="{% url 'core:dashboard' %}">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'knowledge:module_detail' process.module.slug %}">{{ process.module.code }}</a></li>
+      <li class="breadcrumb-item active">{{ process.title }}</li>
+    </ol>
+  </nav>
+
+  <div class="row g-4">
+    <!-- Main Content -->
+    <div class="col-12 col-lg-8">
+      <div class="portal-card">
+        <div class="d-flex align-items-start gap-3 mb-4">
+          <div class="flex-grow-1">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <span class="badge bg-primary">{{ process.module.code }}</span>
+              {% if process.t_code %}<span class="badge bg-dark">{{ process.t_code }}</span>{% endif %}
+              <span class="badge {% if process.difficulty == 'beginner' %}bg-success{% elif process.difficulty == 'intermediate' %}bg-warning text-dark{% else %}bg-danger{% endif %}">
+                {{ process.get_difficulty_display }}
+              </span>
+            </div>
+            <h4 class="fw-bold mb-2">{{ process.title }}</h4>
+            <p class="text-muted">{{ process.description }}</p>
+          </div>
+          {% if request.user.is_admin_or_trainer %}
+          <a href="{% url 'knowledge:process_edit' process.slug %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-pencil"></i> Edit
+          </a>
+          {% endif %}
+        </div>
+
+        {% if process.prerequisites %}
+        <div class="alert alert-info small mb-4">
+          <strong><i class="bi bi-info-circle me-1"></i>Prerequisites:</strong> {{ process.prerequisites }}
+        </div>
+        {% endif %}
+
+        <!-- Workflow Steps -->
+        {% if workflows %}
+        <h6 class="fw-bold mb-3">Workflow Steps</h6>
+        <div class="workflow-steps mb-4">
+          {% for step in workflows %}
+          <div class="workflow-step d-flex gap-3 mb-3">
+            <div class="step-number">{{ step.step_number }}</div>
+            <div class="flex-grow-1">
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <strong class="small">{{ step.title }}</strong>
+                {% if step.t_code %}<span class="badge bg-secondary">{{ step.t_code }}</span>{% endif %}
+                {% if step.responsible_role %}<span class="text-muted small">| {{ step.responsible_role }}</span>{% endif %}
+              </div>
+              {% if step.description %}<p class="text-muted small mb-1">{{ step.description }}</p>{% endif %}
+              {% if step.input_required %}<div class="small"><strong>Input:</strong> {{ step.input_required }}</div>{% endif %}
+              {% if step.output_produced %}<div class="small"><strong>Output:</strong> {{ step.output_produced }}</div>{% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Steps (text) -->
+        {% if process.steps %}
+        <h6 class="fw-bold mb-3">Step-by-Step Instructions</h6>
+        <div class="steps-text bg-light rounded p-3 mb-4">
+          <pre class="mb-0 small" style="white-space:pre-wrap;font-family:inherit;">{{ process.steps }}</pre>
+        </div>
+        {% endif %}
+
+        <!-- FAQs -->
+        {% if faqs %}
+        <h6 class="fw-bold mb-3">FAQs for this Process</h6>
+        <div class="accordion" id="faqAccordion">
+          {% for faq in faqs %}
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed small" type="button" data-bs-toggle="collapse" data-bs-target="#faq{{ faq.pk }}">
+                {{ faq.question }}
+              </button>
+            </h2>
+            <div id="faq{{ faq.pk }}" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body small">{{ faq.answer }}</div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-12 col-lg-4">
+      <!-- Documents -->
+      <div class="portal-card mb-4">
+        <h6 class="fw-bold mb-3"><i class="bi bi-file-earmark-text me-1"></i>Related Documents</h6>
+        {% for doc in documents %}
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <i class="bi bi-file-earmark-pdf text-danger"></i>
+          <a href="{% url 'knowledge:document_download' doc.pk %}" class="text-decoration-none small">{{ doc.title }}</a>
+        </div>
+        {% empty %}
+        <p class="text-muted small">No documents attached.</p>
+        {% endfor %}
+        {% if request.user.is_admin_or_trainer %}
+        <a href="{% url 'knowledge:document_upload' %}" class="btn btn-outline-primary btn-sm mt-2 w-100">
+          <i class="bi bi-upload me-1"></i>Upload Document
+        </a>
+        {% endif %}
+      </div>
+
+      <!-- Related Processes -->
+      {% if related_processes %}
+      <div class="portal-card mb-4">
+        <h6 class="fw-bold mb-3">Related Processes</h6>
+        {% for rp in related_processes %}
+        <a href="{% url 'knowledge:process_detail' rp.slug %}" class="d-block text-decoration-none text-primary small mb-2">
+          <i class="bi bi-arrow-right-circle me-1"></i>{{ rp.title }}
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Ask a Question -->
+      <div class="portal-card">
+        <h6 class="fw-bold mb-2">Have a Question?</h6>
+        <p class="text-muted small">Ask the community about this process.</p>
+        <a href="{% url 'forum:question_create' %}?process={{ process.pk }}" class="btn btn-outline-primary btn-sm w-100">
+          <i class="bi bi-chat-question me-1"></i>Ask in Forum
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+Process Name,T-Code,SAP Module,Short Description,Workflow Stage
+Create Purchase Requisition,ME51N,MM,Create request for procurement of materials,Procurement Initiation
+Change Purchase Requisition,ME52N,MM,Modify existing purchase requisition,Procurement Processing
+Display Purchase Requisition,ME53N,MM,View purchase requisition details,Procurement Review
+Approve Purchase Requisition,ME54N,MM,Approve purchase requisition workflow,Approval
+Create RFQ,ME41,MM,Create request for quotation to vendors,Vendor Sourcing
+Maintain Quotation,ME47,MM,Enter vendor quotation details,Vendor Evaluation
+Price Comparison,ME49,MM,Compare quotations from vendors,Vendor Selection
+Create Purchase Order,ME21N,MM,Generate purchase order for supplier,Procurement Execution
+Change Purchase Order,ME22N,MM,Modify purchase order details,Procurement Maintenance
+Display Purchase Order,ME23N,MM,Display purchase order information,Monitoring
+Release Purchase Order,ME28,MM,Approve or release purchase order,Approval
+Goods Receipt,MIGO,MM,Record receipt of goods from vendor,Inventory Receipt
+Transfer Posting,MB1B,MM,Transfer stock between locations,Inventory Transfer
+Goods Issue,MB1A,MM,Issue material from inventory,Inventory Consumption
+Display Stock Overview,MMBE,MM,Check stock quantity across locations,Inventory Monitoring
+Physical Inventory Document,MI01,MM,Create physical inventory count document,Inventory Audit
+Enter Inventory Count,MI04,MM,Enter physical inventory count results,Inventory Verification
+Invoice Verification,MIRO,MM,Verify vendor invoice against PO,Invoice Processing
+Create Vendor Master,XK01,MM,Create vendor master record,Master Data Creation
+Display Vendor Master,XK03,MM,Display vendor information,Master Data Review
+Create Material Master,MM01,MM,Create new material master record,Master Data Creation
+Change Material Master,MM02,MM,Update material master details,Master Data Maintenance
+Display Material Master,MM03,MM,View material master information,Master Data Review
+Create Customer Master,XD01,SD,Create customer master record,Customer Onboarding
+Change Customer Master,XD02,SD,Modify customer master data,Customer Maintenance
+Display Customer Master,XD03,SD,View customer information,Customer Review
+Create Sales Order,VA01,SD,Create customer sales order,Sales Processing
+Change Sales Order,VA02,SD,Modify sales order details,Sales Maintenance
+Display Sales Order,VA03,SD,View sales order information,Sales Monitoring
+Create Delivery,VL01N,SD,Generate outbound delivery document,Delivery Processing
+Change Delivery,VL02N,SD,Modify delivery information,Logistics Maintenance
+Display Delivery,VL03N,SD,View delivery details,Logistics Monitoring
+Post Goods Issue,VL02N,SD,Record dispatch of goods,Shipment Execution
+Create Billing Document,VF01,SD,Generate customer invoice,Billing
+Change Billing Document,VF02,SD,Modify billing details,Billing Maintenance
+Display Billing Document,VF03,SD,View billing document,Billing Monitoring
+Customer Payment Entry,F-28,FICO,Record incoming customer payment,Accounts Receivable
+Vendor Payment,F-53,FICO,Process outgoing vendor payment,Accounts Payable
+General Ledger Posting,FB50,FICO,Post entries to G/L accounts,Financial Posting
+Vendor Invoice Entry,FB60,FICO,Record vendor invoice,Invoice Entry
+Customer Invoice Entry,FB70,FICO,Create customer invoice posting,Accounts Receivable
+Display Financial Document,FB03,FICO,View accounting document details,Financial Review
+Reverse Financial Document,FB08,FICO,Reverse accounting document,Financial Correction
+G/L Account Balance Display,FS10N,FICO,Display general ledger balances,Financial Reporting
+Vendor Line Item Display,FBL1N,FICO,Display vendor transactions,Accounts Payable Review
+Customer Line Item Display,FBL5N,FICO,Display customer transactions,Accounts Receivable Review
+Asset Explorer,AW01N,FICO,Analyze fixed asset transactions,Asset Management
+Create Cost Center,KS01,FICO,Create controlling cost center,Cost Accounting
+Display Profit Center,KE53,FICO,Display profit center details,Profitability Analysis
+Create Employee Master,PA40,HR,Hire or manage employee actions,Employee Administration
+Maintain HR Master Data,PA30,HR,Update employee records,HR Maintenance
+Display HR Master Data,PA20,HR,View employee master details,HR Review
+Organizational Management,PPOME,HR,Maintain organizational structure,Organization Management
+Time Data Recording,CAT2,HR,Record employee working hours,Time Management
+Payroll Run,PC00_M40_CALC,HR,Execute payroll processing,Payroll Execution
+Leave Request Processing,PTARQ,HR,Manage employee leave requests,Leave Management
+Recruitment Management,PB10,HR,Manage recruitment activities,Talent Acquisition
+Training Event Management,PV10,HR,Schedule and manage training,Learning Management
+Create Maintenance Notification,IW21,PM,Report equipment issue or breakdown,Maintenance Request
+Change Maintenance Notification,IW22,PM,Modify maintenance notification,Maintenance Maintenance
+Display Maintenance Notification,IW23,PM,View maintenance notification,Maintenance Monitoring
+Create Maintenance Order,IW31,PM,Create plant maintenance order,Maintenance Planning
+Change Maintenance Order,IW32,PM,Update maintenance order details,Maintenance Execution
+Display Maintenance Order,IW33,PM,View maintenance order,Maintenance Monitoring
+Display Equipment Master,IE03,PM,View equipment master details,Asset Monitoring
+Create Equipment Master,IE01,PM,Register new equipment,Asset Registration
+Preventive Maintenance Scheduling,IP10,PM,Schedule preventive maintenance tasks,Preventive Maintenance
+Display Functional Location,IL03,PM,View plant functional location,Asset Structure Review
+Create Inspection Lot,QA01,QM,Create quality inspection lot,Quality Inspection
+Record Inspection Results,QE51N,QM,Enter quality inspection results,Quality Recording
+Usage Decision,QA11,QM,Approve or reject inspected material,Quality Decision
+Display Inspection Lot,QA03,QM,View inspection lot details,Quality Monitoring
+Create Quality Notification,QM01,QM,Report quality issue or defect,Quality Reporting
+Change Quality Notification,QM02,QM,Modify quality notification,Quality Maintenance
+Display Quality Notification,QM03,QM,View quality notification details,Quality Review
+Quality Certificate Processing,QC21,QM,Manage quality certificates,Compliance Management
+Vendor Quality Evaluation,QI03,QM,Analyze vendor quality performance,Vendor Quality Review
+Calibration Inspection,QS51,QM,Manage calibration inspection process,Equipment Quality

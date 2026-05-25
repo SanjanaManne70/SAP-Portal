@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}Ask a Question — SAP Portal{% endblock %}
+{% block content %}
+<div class="p-4">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb small">
+      <li class="breadcrumb-item"><a href="{% url 'forum:question_list' %}">Q&A Forum</a></li>
+      <li class="breadcrumb-item active">Ask a Question</li>
+    </ol>
+  </nav>
+
+  <div class="row g-4">
+
+    <!-- Question Form -->
+    <div class="col-12 col-lg-8">
+      <div class="portal-card">
+        <h5 class="fw-bold mb-1">Ask a Question</h5>
+        <p class="text-muted small mb-4">
+          Describe your SAP-related query clearly. Seniors and admins will answer as soon as possible.
+        </p>
+
+        <form method="post">
+          {% csrf_token %}
+          <div class="row g-3">
+
+            <div class="col-12">
+              <label class="form-label small fw-semibold">
+                Question Title <span class="text-danger">*</span>
+              </label>
+              {{ form.title }}
+              <div class="form-text">Be specific — e.g. "How to reverse a Goods Receipt in MIGO?"</div>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label small fw-semibold">SAP Module (optional)</label>
+              {{ form.module }}
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label small fw-semibold">Related Process (optional)</label>
+              {{ form.process }}
+            </div>
+
+            <div class="col-12">
+              <label class="form-label small fw-semibold">Detailed Description</label>
+              {{ form.body }}
+              <div class="form-text">Include error messages, T-Codes used, or any relevant context.</div>
+            </div>
+
+            {% if form.errors %}
+            <div class="col-12">
+              <div class="alert alert-danger small">
+                {% for field in form %}
+                  {% for error in field.errors %}
+                    <div><strong>{{ field.label }}:</strong> {{ error }}</div>
+                  {% endfor %}
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+
+            <div class="col-12 d-flex gap-2 mt-1">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-send me-1"></i>Post Question
+              </button>
+              <a href="{% url 'forum:question_list' %}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Tips Sidebar -->
+    <div class="col-12 col-lg-4">
+      <div class="portal-card mb-3">
+        <h6 class="fw-bold mb-3">
+          <i class="bi bi-lightbulb text-warning me-1"></i>Tips for a Good Question
+        </h6>
+        <ul class="small text-muted ps-3 mb-0">
+          <li class="mb-2">Mention the T-Code or transaction involved</li>
+          <li class="mb-2">Describe what you expected vs what happened</li>
+          <li class="mb-2">Select the correct SAP Module for faster routing</li>
+          <li class="mb-2">Search FAQs first — your answer may already exist</li>
+          <li>Be respectful — seniors are volunteering their time</li>
+        </ul>
+      </div>
+
+      <div class="portal-card">
+        <h6 class="fw-bold mb-3">
+          <i class="bi bi-patch-question text-warning me-1"></i>Check FAQs First
+        </h6>
+        <p class="text-muted small">Your question might already be answered in the FAQ section.</p>
+        <a href="{% url 'knowledge:faq_list' %}" class="btn btn-outline-warning btn-sm w-100">
+          Browse FAQs
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

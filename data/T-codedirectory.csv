@@ -1,0 +1,36 @@
+t_code,description,module_code,menu_path,notes
+ME21N,Create Purchase Order,MM,Logistics > Materials Management > Purchasing > Purchase Order,Used for creating standard purchase orders
+ME22N,Change Purchase Order,MM,Logistics > Materials Management > Purchasing > Purchase Order,Modify existing PO documents
+ME23N,Display Purchase Order,MM,Logistics > Materials Management > Purchasing > Purchase Order,View PO details in display mode
+MIGO,Goods Movement,MM,Logistics > Materials Management > Inventory Management,Handles goods receipt and issue transactions
+MIRO,Invoice Verification,MM,Logistics > Materials Management > Logistics Invoice Verification,Vendor invoice posting transaction
+VA01,Create Sales Order,SD,Logistics > Sales and Distribution > Sales > Order,Used for customer sales order creation
+VA02,Change Sales Order,SD,Logistics > Sales and Distribution > Sales > Order,Modify sales order details
+VA03,Display Sales Order,SD,Logistics > Sales and Distribution > Sales > Order,View sales order in display mode
+VL01N,Create Outbound Delivery,SD,Logistics > Sales and Distribution > Shipping > Outbound Delivery,Delivery document creation
+VF01,Create Billing Document,SD,Logistics > Sales and Distribution > Billing,Billing and invoice generation
+FB50,G/L Account Posting,FI,Accounting > Financial Accounting > General Ledger,Manual G/L postings
+F-02,Post Document,FI,Accounting > Financial Accounting > General Ledger,General financial postings
+F110,Automatic Payment Run,FI,Accounting > Financial Accounting > Accounts Payable,Automatic vendor payments
+FBL1N,Vendor Line Item Display,FI,Accounting > Financial Accounting > Accounts Payable,Vendor account statement display
+FS00,G/L Master Record Maintenance,FI,Accounting > Financial Accounting > General Ledger,Maintain chart of accounts
+KA01,Create Cost Element,CO,Accounting > Controlling > Cost Element Accounting,Create primary cost elements
+KSB1,Cost Center Line Items,CO,Accounting > Controlling > Cost Center Accounting,Cost center expense analysis
+KO01,Create Internal Order,CO,Accounting > Controlling > Internal Orders,Internal order management
+MD01,MRP Run,PP,Logistics > Production > MRP,Material requirements planning execution
+CO01,Create Production Order,PP,Logistics > Production > Shop Floor Control,Production order creation
+CS01,Create BOM,PP,Logistics > Production > Basic Data > Bill of Material,Maintain BOM structures
+PA30,Maintain HR Master Data,HR,Human Resources > Personnel Management > Administration,Employee master data maintenance
+PA40,Personnel Actions,HR,Human Resources > Personnel Management > Administration,Hiring and employee actions
+PT60,Time Evaluation,HR,Human Resources > Time Management,Processes employee attendance data
+QA32,Inspection Lot Processing,QM,Logistics > Quality Management > Quality Inspection,Quality inspection management
+QM01,Create Quality Notification,QM,Logistics > Quality Management > Quality Notification,Record quality issues
+IW21,Create Maintenance Notification,PM,Logistics > Plant Maintenance > Maintenance Processing,Equipment issue notification
+IW31,Create Maintenance Order,PM,Logistics > Plant Maintenance > Maintenance Processing,Maintenance work order creation
+LT01,Create Transfer Order,WM,Logistics > Logistics Execution > Warehouse Management,Warehouse transfer order processing
+SU01,User Maintenance,BASIS,Tools > Administration > User Maintenance,SAP user administration
+PFCG,Role Maintenance,BASIS,Tools > Administration > User Maintenance > Roles and Profiles,Authorization role management
+SE11,ABAP Dictionary,ABAP,Tools > ABAP Workbench > Development > Dictionary,Database table and structure maintenance
+SE38,ABAP Editor,ABAP,Tools > ABAP Workbench > Development > ABAP Editor,Execute and maintain ABAP reports
+RSA1,BW Workbench,BW,Modeling > Business Warehouse,Central BW administration workbench
+RSPC,Process Chain Maintenance,BW,Modeling > Business Warehouse > Process Chains,Schedule and monitor ETL jobs

@@ -1,0 +1,357 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register — BHEL SAP Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+    }
+    .reg-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+      width: 100%;
+      max-width: 660px;
+      overflow: hidden;
+    }
+    .reg-header {
+      background: #0f2744;
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .reg-header img { width:52px; height:52px; object-fit:contain; border-radius:10px; flex-shrink:0; }
+    .reg-header-text h2 { color:#fff; font-size:1.15rem; font-weight:700; margin-bottom:.15rem; }
+    .reg-header-text p  { color:rgba(255,255,255,.55); font-size:.8rem; }
+    .reg-body { padding: 1.5rem 2rem 1.75rem; }
+    .section-label {
+      font-size:.7rem; font-weight:700; letter-spacing:.9px; text-transform:uppercase;
+      color:#94a3b8; margin:1.1rem 0 .75rem;
+      display:flex; align-items:center; gap:.6rem;
+    }
+    .section-label::after { content:''; flex:1; height:1px; background:#e5e7eb; }
+
+    /* ── Role selector — 2 cards only ── */
+    .role-selector { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; margin-bottom:1rem; }
+    .role-option {
+      border:1.5px solid #e5e7eb; border-radius:12px; padding:.9rem 1rem;
+      cursor:pointer; transition:all .18s; background:#f8fafc; position:relative;
+    }
+    .role-option:hover { border-color:#93c5fd; background:#f0f9ff; }
+    .role-option.selected { border-color:#1a56db; background:#eff6ff; }
+    .role-dot {
+      width:14px; height:14px; border-radius:50%; border:1.5px solid #d1d5db;
+      position:absolute; top:.75rem; right:.75rem; transition:all .18s;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .role-option.selected .role-dot { border-color:#1a56db; background:#1a56db; }
+    .role-option.selected .role-dot::after {
+      content:''; width:5px; height:5px; background:#fff; border-radius:50%;
+    }
+    .role-icon-wrap {
+      width:36px; height:36px; border-radius:10px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.1rem; margin-bottom:.55rem;
+      background:#dbeafe; color:#1a56db;
+    }
+    .role-option.admin   .role-icon-wrap { background:#fde8d8; color:#c2410c; }
+    .role-option.selected.employee .role-icon-wrap { background:#1a56db; color:#fff; }
+    .role-option.selected.admin    .role-icon-wrap { background:#c2410c; color:#fff; }
+    .role-title { font-size:.85rem; font-weight:600; color:#0f172a; }
+    .role-desc  { font-size:.74rem; color:#64748b; margin-top:.2rem; line-height:1.4; }
+
+    /* ── Access code box (admin only) ── */
+    .admin-code-box {
+      display:none; background:#fff7ed; border:1.5px solid #fed7aa;
+      border-radius:9px; padding:.85rem 1rem; margin-bottom:.75rem;
+    }
+    .admin-code-box.show { display:block; }
+    .admin-code-label {
+      font-size:.78rem; font-weight:600; color:#9a3412; margin-bottom:.5rem;
+      display:flex; align-items:center; gap:.35rem;
+    }
+    .admin-note { font-size:.72rem; color:#92400e; margin-top:.4rem; }
+
+    /* ── Form fields ── */
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+    .form-grid .full { grid-column: 1 / -1; }
+    .form-group { display:flex; flex-direction:column; }
+    .form-label { font-size:.78rem; font-weight:600; color:#374151; margin-bottom:.3rem; }
+    .field-wrap { position:relative; }
+    .field-wrap .f-icon {
+      position:absolute; left:11px; top:50%; transform:translateY(-50%);
+      color:#9ca3af; font-size:.9rem; pointer-events:none; z-index:2;
+    }
+    .field-wrap .sel-arrow {
+      position:absolute; right:11px; top:50%; transform:translateY(-50%);
+      color:#9ca3af; font-size:.8rem; pointer-events:none;
+    }
+    .field-wrap .pwd-toggle {
+      position:absolute; right:11px; top:50%; transform:translateY(-50%);
+      color:#9ca3af; background:none; border:none; padding:0;
+      cursor:pointer; font-size:.9rem; z-index:2;
+    }
+    .field-wrap .pwd-toggle:hover { color:#475569; }
+    .field-wrap input, .field-wrap select {
+      width:100%; border:1.5px solid #e5e7eb; border-radius:8px;
+      padding:.6rem .9rem .6rem 2.2rem; font-size:.84rem;
+      font-family:'Inter',sans-serif; color:#0f172a; background:#fff; outline:none;
+      transition:border-color .18s, box-shadow .18s;
+    }
+    .field-wrap input:focus, .field-wrap select:focus {
+      border-color:#1a56db; box-shadow:0 0 0 3px rgba(26,86,219,.09);
+    }
+    .field-wrap select { appearance:none; }
+    .field-wrap.has-toggle input { padding-right:2.2rem; }
+    .field-error { font-size:.72rem; color:#dc2626; margin-top:.2rem; }
+    .error-banner {
+      background:#fef2f2; border:1px solid #fecaca; color:#dc2626;
+      border-radius:8px; padding:.65rem .9rem; font-size:.82rem;
+      margin-bottom:.9rem; display:flex; align-items:flex-start; gap:.4rem;
+    }
+    .btn-register {
+      width:100%; padding:.75rem; background:#1a56db; color:#fff; border:none;
+      border-radius:9px; font-size:.9rem; font-weight:600; font-family:'Inter',sans-serif;
+      cursor:pointer; transition:background .18s,transform .1s; margin-top:1.1rem;
+      display:flex; align-items:center; justify-content:center; gap:.4rem;
+    }
+    .btn-register:hover { background:#1645b8; transform:translateY(-1px); }
+    .btn-register:active { transform:translateY(0); }
+    .signin-link { text-align:center; font-size:.82rem; color:#64748b; margin-top:.85rem; }
+    .signin-link a { color:#1a56db; font-weight:500; text-decoration:none; }
+    .signin-link a:hover { text-decoration:underline; }
+
+    @media (max-width:560px) {
+      .reg-body { padding:1.25rem; }
+      .reg-header { padding:1.25rem; }
+      .role-selector { grid-template-columns:1fr; }
+      .form-grid { grid-template-columns:1fr; }
+      .form-grid .full { grid-column:1; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="reg-card">
+
+  <div class="reg-header">
+    <img src="{% static 'images/bhel_logo.png' %}" alt="BHEL"
+         onerror="this.style.display='none'" />
+    <div class="reg-header-text">
+      <h2>Create Account</h2>
+      <p>BHEL SAP Portal — Informative system on SAP business processes</p>
+    </div>
+  </div>
+
+  <div class="reg-body">
+
+    {% if form.non_field_errors %}
+    <div class="error-banner">
+      <i class="bi bi-exclamation-circle-fill" style="flex-shrink:0;margin-top:1px;"></i>
+      <span>{% for err in form.non_field_errors %}{{ err }} {% endfor %}</span>
+    </div>
+    {% endif %}
+
+    <form method="POST" autocomplete="on" novalidate id="registerForm">
+      {% csrf_token %}
+      {{ form.role }}  {# hidden input, value set by JS #}
+
+      <!-- ── Role selector: Employee | Admin ── -->
+      <p class="section-label" style="margin-top:0;">Registering as</p>
+      <div class="role-selector">
+
+        <div class="role-option employee selected" id="roleEmployee" onclick="setRole('employee')">
+          <div class="role-dot"></div>
+          <div class="role-icon-wrap"><i class="bi bi-person-fill"></i></div>
+          <div class="role-title">Employee</div>
+          <div class="role-desc">Standard portal access for all staff</div>
+        </div>
+
+        <div class="role-option admin" id="roleAdmin" onclick="setRole('admin')">
+          <div class="role-dot"></div>
+          <div class="role-icon-wrap"><i class="bi bi-shield-lock-fill"></i></div>
+          <div class="role-title">Admin</div>
+          <div class="role-desc">Manage content, users &amp; bulk uploads</div>
+        </div>
+
+      </div>
+
+      <!-- ── Access code (Admin only) ── -->
+      <div class="admin-code-box" id="adminCodeBox">
+        <div class="admin-code-label">
+          <i class="bi bi-key-fill"></i> Access code required
+        </div>
+        <div class="field-wrap">
+          <i class="bi bi-lock-fill f-icon"></i>
+          {{ form.admin_code }}
+        </div>
+        {% if form.admin_code.errors %}
+        <div class="field-error mt-1">{{ form.admin_code.errors.0 }}</div>
+        {% endif %}
+        <p class="admin-note">
+          Contact your system administrator to obtain the access code.
+        </p>
+      </div>
+
+      <!-- ── Personal Info ── -->
+      <p class="section-label">Personal information</p>
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label class="form-label">First name</label>
+          <div class="field-wrap">
+            <i class="bi bi-person f-icon"></i>{{ form.first_name }}
+          </div>
+          {% if form.first_name.errors %}<div class="field-error">{{ form.first_name.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Last name</label>
+          <div class="field-wrap">
+            <i class="bi bi-person f-icon"></i>{{ form.last_name }}
+          </div>
+          {% if form.last_name.errors %}<div class="field-error">{{ form.last_name.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <div class="field-wrap">
+            <i class="bi bi-at f-icon"></i>{{ form.username }}
+          </div>
+          {% if form.username.errors %}<div class="field-error">{{ form.username.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Employee ID</label>
+          <div class="field-wrap">
+            <i class="bi bi-credit-card f-icon"></i>{{ form.employee_id }}
+          </div>
+          {% if form.employee_id.errors %}<div class="field-error">{{ form.employee_id.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group full">
+          <label class="form-label">Work email</label>
+          <div class="field-wrap">
+            <i class="bi bi-envelope f-icon"></i>{{ form.email }}
+          </div>
+          {% if form.email.errors %}<div class="field-error">{{ form.email.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group full">
+          <label class="form-label">Department</label>
+          <div class="field-wrap">
+            <i class="bi bi-building f-icon"></i>
+            {{ form.department }}
+            <i class="bi bi-chevron-down sel-arrow"></i>
+          </div>
+          {% if form.department.errors %}<div class="field-error">{{ form.department.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group full">
+          <p class="section-label" style="margin-top:.25rem;">Security</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="field-wrap has-toggle">
+            <i class="bi bi-lock f-icon"></i>
+            {{ form.password1 }}
+            <button type="button" class="pwd-toggle" onclick="togglePwd('id_password1','icon1')">
+              <i class="bi bi-eye" id="icon1"></i>
+            </button>
+          </div>
+          {% if form.password1.errors %}<div class="field-error">{{ form.password1.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Confirm password</label>
+          <div class="field-wrap has-toggle">
+            <i class="bi bi-lock f-icon"></i>
+            {{ form.password2 }}
+            <button type="button" class="pwd-toggle" onclick="togglePwd('id_password2','icon2')">
+              <i class="bi bi-eye" id="icon2"></i>
+            </button>
+          </div>
+          {% if form.password2.errors %}<div class="field-error">{{ form.password2.errors.0 }}</div>{% endif %}
+        </div>
+
+      </div>
+
+      <button type="submit" class="btn-register">
+        <i class="bi bi-person-plus"></i> Create Account
+      </button>
+    </form>
+
+    <div class="signin-link">
+      Already have an account? <a href="{% url 'accounts:login' %}">Sign in here</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  function setRole(role) {
+    document.querySelectorAll('.role-option').forEach(el => el.classList.remove('selected'));
+    document.getElementById(role === 'employee' ? 'roleEmployee' : 'roleAdmin').classList.add('selected');
+
+    // Write into Django's hidden <input name="role">
+    document.getElementById('id_role').value = role;
+
+    // Show/hide access-code box
+    const show = (role === 'admin');
+    const box  = document.getElementById('adminCodeBox');
+    box.classList.toggle('show', show);
+    const codeInput = box.querySelector('input');
+    if (codeInput) {
+      codeInput.required = show;
+      if (!show) codeInput.value = '';
+    }
+  }
+
+  function togglePwd(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon  = document.getElementById(iconId);
+    input.type  = input.type === 'password' ? 'text' : 'password';
+    icon.className = input.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Restore role after a validation error re-render
+    const saved = '{{ form.role.value|default:"employee" }}';
+    setRole(saved);
+
+    // Remove Bootstrap widget classes — our CSS handles all styling
+    document.querySelectorAll('.field-wrap input, .field-wrap select').forEach(el => {
+      el.classList.remove('form-control', 'form-select', 'form-control-lg');
+    });
+
+    const placeholders = {
+      id_first_name:  'First name',
+      id_last_name:   'Last name',
+      id_username:    'Choose a username',
+      id_employee_id: 'e.g. EMP00123',
+      id_email:       'Work email address',
+      id_password1:   'Create a strong password',
+      id_password2:   'Re-enter your password',
+    };
+    Object.entries(placeholders).forEach(([id, ph]) => {
+      const el = document.getElementById(id);
+      if (el) el.placeholder = ph;
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+Question,Answer,SAP Module,Related T-Code,Question Status,Difficulty Level
+How do I create a purchase requisition in SAP?,"Use transaction ME51N to create a purchase requisition by entering material, quantity, and plant details.",MM,ME51N,Answered,Beginner
+What is the difference between ME21N and ME51N?,"ME51N is used for Purchase Requisition creation, while ME21N is used for Purchase Order creation.",MM,ME21N,Answered,Beginner
+Why am I unable to post goods receipt?,Verify whether the purchase order is released and ensure the delivery quantity matches the PO.,MM,MIGO,Answered,Intermediate
+How can I display stock availability?,Use MMBE to check stock overview by plant and storage location.,MM,MMBE,Answered,Beginner
+What causes invoice blocking in SAP MM?,Invoice blocking usually occurs due to quantity or price mismatch during invoice verification.,MM,MIRO,Answered,Intermediate
+How do I extend a material to another plant?,Use MM01 and select the required plant and storage views for extension.,MM,MM01,Answered,Intermediate
+Can we reverse a goods receipt document?,"Yes, goods receipt can be reversed using movement reversal in MIGO.",MM,MIGO,Answered,Intermediate
+How do I maintain vendor master data?,"Vendor master records can be maintained using XK01, XK02, and XK03.",MM,XK01,Answered,Beginner
+Why is my purchase order not getting approved?,Check release strategy configuration and authorization roles assigned to the user.,MM,ME28,Answered,Advanced
+What is the use of source list in procurement?,Source list defines approved vendors for a material during procurement processing.,MM,ME01,Answered,Intermediate
+How do I post a vendor invoice?,Vendor invoices can be posted using FB60 after entering vendor and invoice details.,FICO,FB60,Answered,Beginner
+What is the difference between FB50 and F-02?,FB50 is used for G/L postings while F-02 is used for general document posting.,FICO,FB50,Answered,Intermediate
+How do I check vendor balances?,Use FBL1N to display vendor line items and balances.,FICO,FBL1N,Answered,Beginner
+Why is my accounting document not posted?,The posting period may be closed or mandatory fields may be missing.,FICO,FB01,Answered,Intermediate
+How can I reverse a financial document?,Use FB08 to reverse an accounting document with proper authorization.,FICO,FB08,Answered,Beginner
+How do I display G/L account balances?,FS10N is used to display G/L account balances for a fiscal year.,FICO,FS10N,Answered,Beginner
+What is automatic payment program in SAP?,F110 automates vendor payment processing based on due invoices.,FICO,F110,Answered,Intermediate
+Why am I getting tax code errors during posting?,Verify tax configuration and ensure valid tax codes are assigned.,FICO,FB60,Answered,Advanced
+How do I create a customer invoice?,Use FB70 to create and post customer invoices.,FICO,FB70,Answered,Beginner
+What is the purpose of asset explorer?,"AW01N helps analyze asset values, depreciation, and accounting entries.",FICO,AW01N,Answered,Intermediate
+How do I hire a new employee in SAP HR?,Use PA40 to execute hiring actions and create employee records.,HR,PA40,Answered,Beginner
+How can employees apply for leave in SAP?,Employees can apply leave through ESS or PTARQ transactions.,HR,PTARQ,Answered,Beginner
+How do I update employee master data?,Employee records can be maintained using PA30.,HR,PA30,Answered,Beginner
+Why is payroll not generated for an employee?,Verify payroll area assignment and time evaluation completion.,HR,PC00_M40_CALC,Answered,Advanced
+How do I display employee details?,Use PA20 to display HR master data records.,HR,PA20,Answered,Beginner
+What is organizational management in SAP HR?,"Organizational management defines company structure, positions, and reporting hierarchy.",HR,PPOME,Answered,Intermediate
+How do I record employee attendance?,Attendance and work hours can be maintained using CAT2.,HR,CAT2,Answered,Beginner
+Why is an employee not visible in payroll run?,Employee may not be assigned to correct payroll control record.,HR,PA30,Answered,Advanced
+Can we modify payroll results after execution?,Payroll corrections require retroactive accounting and proper authorization.,HR,PC00_M40_CALC,Answered,Advanced
+How do I manage employee training programs?,Training events and schedules can be managed using PV10.,HR,PV10,Pending,Intermediate
+How do I create a sales order in SAP SD?,Use VA01 to create sales orders by entering customer and material details.,SD,VA01,Answered,Beginner
+What is the difference between delivery and billing?,Delivery handles shipment processing while billing generates invoices.,SD,VL01N,Answered,Beginner
+Why is delivery creation blocked?,Check stock availability and delivery block settings in sales order.,SD,VL01N,Answered,Intermediate
+How do I generate customer invoices?,Use VF01 to create billing documents for deliveries.,SD,VF01,Answered,Beginner
+What is post goods issue in SAP SD?,PGI confirms goods shipment and updates inventory/accounting.,SD,VL02N,Answered,Intermediate
+How can I check customer master data?,Use XD03 to display customer master records.,SD,XD03,Answered,Beginner
+Why is pricing not determined in sales order?,Pricing procedure or condition records may be missing.,SD,VA01,Answered,Advanced
+How do I track outbound deliveries?,VL03N displays outbound delivery status and shipment details.,SD,VL03N,Answered,Beginner
+What is the purpose of credit management in SD?,Credit management controls customer credit exposure during sales processing.,SD,FD32,Answered,Intermediate
+Why is billing document not created automatically?,Verify copy control configuration and delivery completion status.,SD,VF01,Pending,Advanced

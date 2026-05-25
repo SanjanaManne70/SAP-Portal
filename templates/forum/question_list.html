@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Q&A Forum — BHEL SAP Portal{% endblock %}
+{% block content %}
+<div class="p-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+      <h5 class="fw-bold mb-1">Q&A Forum</h5>
+      <p class="text-muted small mb-0">Ask questions, share knowledge, get answers</p>
+    </div>
+    <a href="{% url 'forum:question_create' %}" class="btn btn-primary btn-sm">
+      <i class="bi bi-plus-circle me-1"></i>Ask Question
+    </a>
+  </div>
+
+  <!-- Filters -->
+  <form method="get" class="row g-2 mb-4">
+    <div class="col-12 col-md-5">
+      <input type="text" name="q" class="form-control form-control-sm" placeholder="Search questions..." value="{{ query }}">
+    </div>
+    <div class="col-6 col-md-3">
+      <select name="module" class="form-select form-select-sm">
+        <option value="">All Modules</option>
+        {% for mod in modules %}<option value="{{ mod.slug }}" {% if selected_module == mod.slug %}selected{% endif %}>{{ mod.code }} — {{ mod.name }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="col-6 col-md-2">
+      <select name="status" class="form-select form-select-sm">
+        <option value="">All Status</option>
+        {% for val, label in status_choices %}<option value="{{ val }}" {% if status_filter == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="col-12 col-md-2">
+      <button class="btn btn-primary btn-sm w-100" type="submit">Filter</button>
+    </div>
+  </form>
+
+  <!-- Questions List -->
+  <div class="portal-card p-0">
+    {% for question in questions %}
+    <div class="forum-list-item p-3 border-bottom">
+      <div class="d-flex gap-3">
+        <div class="forum-user-avatar">{{ question.asked_by.initials }}</div>
+        <div class="flex-grow-1">
+          <a href="{% url 'forum:question_detail' question.pk %}" class="text-decoration-none">
+            <div class="fw-semibold text-dark mb-1">{{ question.title }}</div>
+          </a>
+          <div class="d-flex align-items-center gap-3 flex-wrap">
+            <span class="text-muted small"><i class="bi bi-person me-1"></i>{{ question.asked_by.display_name }}</span>
+            {% if question.module %}<span class="badge bg-primary-subtle text-primary">{{ question.module.code }}</span>{% endif %}
+            <span class="text-muted small"><i class="bi bi-clock me-1"></i>{{ question.asked_at|timesince }} ago</span>
+            <span class="text-muted small"><i class="bi bi-chat me-1"></i>{{ question.answer_count }} answers</span>
+            <span class="badge {% if question.status == 'answered' %}bg-success{% elif question.status == 'pending' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+              {{ question.get_status_display }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="text-center py-5 text-muted">
+      <i class="bi bi-chat-dots fs-1"></i>
+      <p class="mt-2">No questions yet. <a href="{% url 'forum:question_create' %}">Be the first to ask!</a></p>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Pagination -->
+  {% if questions.has_other_pages %}
+  <nav class="mt-4">
+    <ul class="pagination justify-content-center">
+      {% if questions.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ questions.previous_page_number }}">Previous</a></li>{% endif %}
+      <li class="page-item active"><span class="page-link">{{ questions.number }}</span></li>
+      {% if questions.has_next %}<li class="page-item"><a class="page-link" href="?page={{ questions.next_page_number }}">Next</a></li>{% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+{% endblock %}

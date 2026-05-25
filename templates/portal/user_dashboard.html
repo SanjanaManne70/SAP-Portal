@@ -1,0 +1,474 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}My Dashboard — BHEL SAP Portal{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* ── Widen sidebar via CSS override ── */
+  .sidebar { width: 272px !important; }
+  .main-wrapper { margin-left: 272px !important; }
+
+  /* ── Module strip ── */
+  .module-strip {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-bottom: 1px solid #e5e9f2;
+    background: #fff;
+    padding: 0 24px;
+  }
+  .module-strip::-webkit-scrollbar { display: none; }
+
+  .module-pill {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 14px 20px;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: border-color .15s, background .15s;
+    position: relative;
+  }
+  .module-pill:hover { border-bottom-color: #1a56db; background: #f8faff; }
+  .module-pill + .module-pill::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 20%; bottom: 20%;
+    width: 1px;
+    background: #e5e9f2;
+  }
+  .module-pill-name {
+    font-size: .82rem;
+    font-weight: 600;
+    color: #1a202c;
+  }
+  .module-pill-count {
+    font-size: .72rem;
+    color: #64748b;
+    margin-top: 2px;
+  }
+
+  /* ── Main content area ── */
+  .dash-content { padding: 20px 24px 24px; }
+
+  /* ── 3-col / 2-col grids ── */
+  .dash-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+  .dash-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+
+  /* ── Cards ── */
+  .d-card {
+    background: #fff;
+    border: 1px solid #e5e9f2;
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .d-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .d-card-title {
+    font-size: .9rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0;
+  }
+  .d-card-sub {
+    font-size: .75rem;
+    color: #64748b;
+    margin-top: 2px;
+  }
+  .d-card-link {
+    font-size: .78rem;
+    color: #1a56db;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .d-card-link:hover { text-decoration: underline; }
+
+  /* ── Bottom stats bar ── */
+  .bottom-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .bstat {
+    background: #fff;
+    border: 1px solid #e5e9f2;
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .bstat-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .bstat-num { font-size: 1.35rem; font-weight: 700; color: #0f172a; line-height: 1; }
+  .bstat-lbl { font-size: .72rem; color: #64748b; margin-top: 2px; }
+
+  /* ── P2P flow ── */
+  .p2p-flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 12px 0 8px;
+  }
+  .p2p-step { text-align: center; min-width: 62px; }
+  .p2p-icon {
+    width: 44px; height: 44px;
+    background: #eff6ff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 5px;
+    font-size: 1.05rem;
+    color: #1a56db;
+  }
+  .p2p-label { font-size: .68rem; font-weight: 600; color: #1a202c; line-height: 1.3; }
+  .p2p-tcode { font-size: .62rem; color: #64748b; font-family: 'Courier New', monospace; margin-top: 2px; }
+  .p2p-arrow { font-size: 1rem; color: #cbd5e1; padding-bottom: 16px; }
+
+  .btn-outline-sm {
+    display: inline-block;
+    padding: 7px 18px;
+    border: 1.5px solid #1a56db;
+    color: #1a56db;
+    border-radius: 6px;
+    font-size: .8rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all .15s;
+  }
+  .btn-outline-sm:hover { background: #1a56db; color: #fff; }
+
+  /* ── Popular processes table ── */
+  .pop-table { width: 100%; border-collapse: collapse; font-size: .81rem; }
+  .pop-table th {
+    padding: 6px 8px;
+    color: #64748b;
+    font-weight: 600;
+    font-size: .74rem;
+    text-align: left;
+    border-bottom: 1.5px solid #f1f5f9;
+  }
+  .pop-table td {
+    padding: 8px 8px;
+    border-bottom: 1px solid #f8fafc;
+    vertical-align: middle;
+  }
+  .pop-table tr:last-child td { border-bottom: none; }
+  .pop-link { color: #1a56db; text-decoration: none; font-weight: 500; }
+  .pop-link:hover { text-decoration: underline; }
+  .tcode-tag {
+    display: inline-block;
+    background: #f1f5f9;
+    color: #1a202c;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: .72rem;
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+  }
+  .mod-tag {
+    display: inline-block;
+    background: #eff6ff;
+    color: #1a56db;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: .72rem;
+    font-weight: 600;
+  }
+
+  /* ── Announcements ── */
+  .ann-item { padding: 9px 0; border-bottom: 1px solid #f1f5f9; }
+  .ann-item:last-child { border-bottom: none; }
+  .ann-title { font-size: .84rem; font-weight: 600; color: #1a56db; margin-bottom: 2px; }
+  .ann-body  { font-size: .77rem; color: #64748b; }
+  .ann-date  { font-size: .7rem; color: #94a3b8; margin-top: 3px; }
+
+  /* ── Documents ── */
+  .doc-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 0; border-bottom: 1px solid #f1f5f9;
+    font-size: .8rem;
+  }
+  .doc-item:last-of-type { border-bottom: none; }
+  .doc-name { flex: 1; color: #1a202c; text-decoration: none; font-weight: 500;
+               white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .doc-name:hover { color: #1a56db; }
+  .doc-date { font-size: .7rem; color: #94a3b8; flex-shrink: 0; }
+
+  /* ── Q&A ── */
+  .qa-item { padding: 9px 0; border-bottom: 1px solid #f1f5f9; }
+  .qa-item:last-child { border-bottom: none; }
+  .qa-q { color: #1a56db; font-weight: 500; font-size: .84rem; text-decoration: none; display: block; margin-bottom: 3px; }
+  .qa-q:hover { text-decoration: underline; }
+  .qa-meta { display: flex; align-items: center; gap: 4px; font-size: .73rem; color: #64748b; }
+  .qa-dot { margin: 0 2px; }
+  .qa-badge {
+    margin-left: 6px; padding: 2px 8px; border-radius: 12px;
+    font-size: .68rem; font-weight: 600;
+  }
+  .qa-badge.answered { background: #dcfce7; color: #16a34a; }
+  .qa-badge.pending  { background: #fef9c3; color: #ca8a04; }
+  .btn-ask {
+    display: inline-flex; align-items: center;
+    background: #1a56db; color: #fff;
+    padding: 7px 16px; border-radius: 6px;
+    font-size: .8rem; font-weight: 600; text-decoration: none;
+    transition: background .15s;
+  }
+  .btn-ask:hover { background: #1645b8; color: #fff; }
+
+  @media(max-width:992px){
+    .sidebar { width: 248px !important; }
+    .main-wrapper { margin-left: 0 !important; }
+    .dash-grid-3, .dash-grid-2 { grid-template-columns: 1fr; }
+    .bottom-stats { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrap">
+
+  <!-- ── MODULE STRIP (top, with vertical dividers) ── -->
+  <div class="module-strip">
+    {% for module in modules %}
+    <a href="{% url 'knowledge:module_detail' module.slug %}" class="module-pill">
+      <div class="module-pill-name">{{ module.name }}</div>
+      <div class="module-pill-count">{{ module.process_count }} Processes</div>
+    </a>
+    {% empty %}
+    <div class="text-muted small p-3">No modules assigned yet.</div>
+    {% endfor %}
+  </div>
+
+  <!-- ── MAIN CONTENT ── -->
+  <div class="dash-content">
+
+    <!-- Row 1: Process Explorer + Popular Processes + Announcements -->
+    <div class="dash-grid-3">
+
+      <!-- Process Explorer -->
+      <div class="d-card">
+        <div class="d-card-header">
+          <div>
+            <p class="d-card-title">Process Explorer</p>
+            <p class="d-card-sub">SAP processes{% if current_dept %} for {{ current_dept.name }}{% endif %}</p>
+          </div>
+        </div>
+        <div class="p2p-flow">
+          {% for step in p2p_steps %}
+          <div class="p2p-step">
+            <div class="p2p-icon">
+              {% if forloop.counter == 1 %}<i class="bi bi-file-earmark-text"></i>
+              {% elif forloop.counter == 2 %}<i class="bi bi-cart3"></i>
+              {% elif forloop.counter == 3 %}<i class="bi bi-box-seam"></i>
+              {% elif forloop.counter == 4 %}<i class="bi bi-receipt"></i>
+              {% else %}<i class="bi bi-currency-rupee"></i>{% endif %}
+            </div>
+            <div class="p2p-label">{{ step.label }}</div>
+            <div class="p2p-tcode">{{ step.tcode }}</div>
+          </div>
+          {% if not forloop.last %}<div class="p2p-arrow"><i class="bi bi-arrow-right"></i></div>{% endif %}
+          {% endfor %}
+        </div>
+        <a href="{% url 'knowledge:process_explorer' %}" class="btn-outline-sm mt-3 d-inline-block">
+          View Full Process Flow
+        </a>
+      </div>
+
+      <!-- Popular Processes -->
+      <div class="d-card">
+        <div class="d-card-header">
+          <p class="d-card-title">Popular Processes</p>
+          <a href="{% url 'knowledge:process_explorer' %}" class="d-card-link">View All</a>
+        </div>
+        <table class="pop-table">
+          <thead>
+            <tr><th>Process</th><th>T-Code</th><th>Module</th></tr>
+          </thead>
+          <tbody>
+            {% for process in popular_processes %}
+            <tr>
+              <td><a href="{% url 'knowledge:process_detail' process.slug %}" class="pop-link">{{ process.title }}</a></td>
+              <td><span class="tcode-tag">{{ process.t_code }}</span></td>
+              <td><span class="mod-tag">{{ process.module.code }}</span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-muted text-center py-3 small">No processes yet</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <a href="{% url 'knowledge:process_explorer' %}" class="btn-outline-sm mt-3 d-block text-center">
+          Explore All Processes
+        </a>
+      </div>
+
+      <!-- Announcements -->
+      <div class="d-card">
+        <div class="d-card-header">
+          <p class="d-card-title">Latest Announcements</p>
+        </div>
+        {% for ann in recent_announcements %}
+        <div class="ann-item">
+          <div class="ann-title">{{ ann.title }}</div>
+          <div class="ann-body">{{ ann.body|truncatewords:12 }}</div>
+          <div class="ann-date">{{ ann.created_at|date:"d M Y" }}</div>
+        </div>
+        {% empty %}
+        <p class="text-muted small">No announcements yet.</p>
+        {% endfor %}
+      </div>
+
+    </div><!-- /dash-grid-3 -->
+
+    <!-- Row 2: Documents + Q&A -->
+    <div class="dash-grid-2">
+
+      <!-- Recent Documents -->
+      <div class="d-card">
+        <div class="d-card-header">
+          <div>
+            <p class="d-card-title">Recent Documents</p>
+            <p class="d-card-sub">Latest uploads{% if current_dept %} for {{ current_dept.name }}{% endif %}</p>
+          </div>
+          <a href="{% url 'knowledge:document_list' %}" class="d-card-link">View All</a>
+        </div>
+        {% for doc in recent_docs %}
+        <div class="doc-item">
+          <i class="bi bi-file-earmark-pdf text-danger"></i>
+          <a href="{% url 'knowledge:document_download' doc.pk %}" class="doc-name">{{ doc.title|truncatewords:6 }}</a>
+          <span class="doc-date">{{ doc.uploaded_at|date:"d M Y" }}</span>
+        </div>
+        {% empty %}
+        <p class="text-muted small py-2">No documents for your department yet.</p>
+        {% endfor %}
+        <a href="{% url 'knowledge:document_list' %}" class="d-card-link d-block mt-2">View All Documents</a>
+      </div>
+
+      <!-- Q&A Forum -->
+      <div class="d-card">
+        <div class="d-card-header">
+          <p class="d-card-title">Q&amp;A Forum</p>
+          <a href="{% url 'forum:question_list' %}" class="d-card-link">View All</a>
+        </div>
+        {% for question in recent_questions %}
+        <div class="qa-item">
+          <a href="{% url 'forum:question_detail' question.pk %}" class="qa-q">{{ question.title }}</a>
+          <div class="qa-meta">
+            <span>{{ question.asked_by.display_name }}</span>
+            <span class="qa-dot">·</span>
+            <span>{{ question.asked_at|timesince }} ago</span>
+            <span class="qa-badge {% if question.status == 'answered' %}answered{% else %}pending{% endif %}">
+              {{ question.get_status_display }}
+            </span>
+          </div>
+        </div>
+        {% empty %}
+        <p class="text-muted small py-2 text-center">No questions yet. <a href="{% url 'forum:question_create' %}">Ask the first one!</a></p>
+        {% endfor %}
+        <a href="{% url 'forum:question_create' %}" class="btn-ask mt-3">
+          <i class="bi bi-plus-circle me-1"></i>Ask a Question
+        </a>
+      </div>
+
+    </div><!-- /dash-grid-2 -->
+
+    <!-- ── STATS BAR — bottom ── -->
+    <div class="bottom-stats">
+      <div class="bstat">
+        <div class="bstat-icon" style="background:#eff6ff;">
+          <i class="bi bi-diagram-3 text-primary"></i>
+        </div>
+        <div>
+          <div class="bstat-num">{{ total_processes }}</div>
+          <div class="bstat-lbl">Dept Processes</div>
+        </div>
+      </div>
+      <div class="bstat">
+        <div class="bstat-icon" style="background:#f0fdf4;">
+          <i class="bi bi-file-earmark-text text-success"></i>
+        </div>
+        <div>
+          <div class="bstat-num">{{ total_documents }}</div>
+          <div class="bstat-lbl">Documents</div>
+        </div>
+      </div>
+      <div class="bstat">
+        <div class="bstat-icon" style="background:#fefce8;">
+          <i class="bi bi-patch-question" style="color:#ca8a04;"></i>
+        </div>
+        <div>
+          <div class="bstat-num">{{ total_faqs }}</div>
+          <div class="bstat-lbl">FAQs</div>
+        </div>
+      </div>
+      <div class="bstat">
+        <div class="bstat-icon" style="background:#f0f9ff;">
+          <i class="bi bi-chat-dots text-info"></i>
+        </div>
+        <div>
+          <div class="bstat-num">{{ total_questions }}</div>
+          <div class="bstat-lbl">Q&amp;A Posts</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /dash-content -->
+
+</div>
+
+<!-- ── Department Switch Modal ── -->
+<div class="modal fade" id="deptSwitchModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:14px;">
+      <div class="modal-header border-0 pb-0">
+        <h6 class="modal-title fw-bold">Switch Department</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="{% url 'accounts:switch_department' %}">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Select Department</label>
+            <select name="department" class="form-select">
+              {% for d in all_departments %}
+              <option value="{{ d.pk }}" {% if d == current_dept %}selected{% endif %}>{{ d.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Reason (optional)</label>
+            <textarea name="reason" class="form-control" rows="2" placeholder="Why are you switching?"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Switch Department</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

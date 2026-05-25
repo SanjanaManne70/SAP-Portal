@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}{{ question.title }} — Forum{% endblock %}
+{% block content %}
+<div class="p-4">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb small">
+      <li class="breadcrumb-item"><a href="{% url 'forum:question_list' %}">Q&A Forum</a></li>
+      <li class="breadcrumb-item active">Question</li>
+    </ol>
+  </nav>
+
+  <div class="row g-4">
+    <div class="col-12 col-lg-8">
+      <!-- Question -->
+      <div class="portal-card mb-4">
+        <div class="d-flex align-items-start gap-3 mb-3">
+          <div class="forum-user-avatar large">{{ question.asked_by.initials }}</div>
+          <div class="flex-grow-1">
+            <h5 class="fw-bold mb-2">{{ question.title }}</h5>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+              {% if question.module %}<span class="badge bg-primary-subtle text-primary">{{ question.module.code }}</span>{% endif %}
+              <span class="badge {% if question.status == 'answered' %}bg-success{% else %}bg-warning text-dark{% endif %}">{{ question.get_status_display }}</span>
+            </div>
+            <p class="text-muted">{{ question.body }}</p>
+            <div class="text-muted small">Asked by <strong>{{ question.asked_by.display_name }}</strong> · {{ question.asked_at|date:"d M Y, H:i" }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Answers -->
+      <h6 class="fw-bold mb-3">{{ answers.count }} Answer{{ answers.count|pluralize }}</h6>
+      {% for answer in answers %}
+      <div class="portal-card mb-3 {% if answer.is_accepted %}accepted-answer{% endif %}">
+        {% if answer.is_accepted %}
+        <div class="accepted-badge mb-2"><i class="bi bi-check-circle-fill text-success me-1"></i>Accepted Answer</div>
+        {% endif %}
+        <div class="d-flex gap-3">
+          <div class="forum-user-avatar">{{ answer.answered_by.initials }}</div>
+          <div class="flex-grow-1">
+            <div class="mb-2">{{ answer.body }}</div>
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+              <span class="text-muted small">{{ answer.answered_by.display_name }} · {{ answer.answered_at|timesince }} ago</span>
+              <button class="btn btn-sm btn-outline-secondary upvote-btn" data-answer="{{ answer.pk }}">
+                <i class="bi bi-hand-thumbs-up me-1"></i><span class="upvote-count">{{ answer.upvotes }}</span>
+              </button>
+              {% if request.user == question.asked_by or request.user.is_admin_or_trainer %}
+              {% if not answer.is_accepted %}
+              <a href="{% url 'forum:accept_answer' answer.pk %}" class="btn btn-sm btn-outline-success">
+                <i class="bi bi-check2 me-1"></i>Accept
+              </a>
+              {% endif %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="text-muted small mb-4">No answers yet. Be the first to help!</div>
+      {% endfor %}
+
+      <!-- Post Answer -->
+      <div class="portal-card">
+        <h6 class="fw-bold mb-3">Your Answer</h6>
+        <form method="post">
+          {% csrf_token %}
+          {{ form.body }}
+          <button type="submit" class="btn btn-primary mt-3">Post Answer</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-12 col-lg-4">
+      <div class="portal-card">
+        <h6 class="fw-bold mb-3">Question Details</h6>
+        <div class="small text-muted mb-2"><strong>Asked:</strong> {{ question.asked_at|date:"d M Y" }}</div>
+        <div class="small text-muted mb-2"><strong>Views:</strong> {{ question.view_count }}</div>
+        <div class="small text-muted mb-2"><strong>Answers:</strong> {{ answers.count }}</div>
+        {% if question.module %}
+        <div class="small text-muted mb-3"><strong>Module:</strong> {{ question.module.name }}</div>
+        {% endif %}
+        <a href="{% url 'forum:question_create' %}" class="btn btn-outline-primary btn-sm w-100">Ask Another Question</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.upvote-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const id = this.dataset.answer;
+    fetch(`/forum/answers/${id}/upvote/`, {headers: {'X-CSRFToken': '{{ csrf_token }}'}})
+      .then(r => r.json())
+      .then(d => this.querySelector('.upvote-count').textContent = d.upvotes);
+  });
+});
+</script>
+{% endblock %}

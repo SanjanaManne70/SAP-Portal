@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block title %}FAQs — SAP Portal{% endblock %}
+{% block content %}
+<div class="p-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+      <h5 class="fw-bold mb-1">Frequently Asked Questions</h5>
+      <p class="text-muted small mb-0">Common SAP process queries and their answers</p>
+    </div>
+    {% if request.user.is_admin_or_trainer %}
+    <a href="{% url 'knowledge:faq_create' %}" class="btn btn-primary btn-sm">
+      <i class="bi bi-plus-circle me-1"></i>Add FAQ
+    </a>
+    {% endif %}
+  </div>
+
+  <!-- Search + Filter -->
+  <form method="get" class="row g-2 mb-4">
+    <div class="col-12 col-md-5">
+      <input type="text" name="q" class="form-control form-control-sm"
+             placeholder="Search FAQs..." value="{{ query }}">
+    </div>
+    <div class="col-6 col-md-4">
+      <select name="module" class="form-select form-select-sm">
+        <option value="">All Modules</option>
+        {% for mod in modules %}
+        <option value="{{ mod.slug }}" {% if selected_module == mod.slug %}selected{% endif %}>
+          {{ mod.code }} — {{ mod.name }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-6 col-md-3">
+      <button class="btn btn-primary btn-sm w-100" type="submit">Search</button>
+    </div>
+  </form>
+
+  <!-- Module Filter Pills -->
+  <div class="d-flex gap-2 flex-wrap mb-4">
+    <a href="{% url 'knowledge:faq_list' %}"
+       class="btn btn-sm {% if not selected_module %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+      All
+    </a>
+    {% for mod in modules %}
+    <a href="?module={{ mod.slug }}"
+       class="btn btn-sm {% if selected_module == mod.slug %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+      {{ mod.code }}
+    </a>
+    {% endfor %}
+  </div>
+
+  <!-- FAQ Accordion -->
+  {% if faqs %}
+  <div class="accordion" id="faqAccordion">
+    {% for faq in faqs %}
+    <div class="accordion-item mb-2 border rounded shadow-sm">
+      <h2 class="accordion-header" id="heading{{ faq.pk }}">
+        <button class="accordion-button collapsed fw-semibold small rounded"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#faq{{ faq.pk }}"
+                aria-expanded="false">
+          <div class="d-flex align-items-center gap-2 w-100 me-3">
+            {% if faq.module %}
+            <span class="badge bg-primary-subtle text-primary flex-shrink-0">{{ faq.module.code }}</span>
+            {% endif %}
+            <span>{{ faq.question }}</span>
+          </div>
+        </button>
+      </h2>
+      <div id="faq{{ faq.pk }}" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body small">
+          <p class="mb-2">{{ faq.answer }}</p>
+          <div class="d-flex align-items-center gap-3 text-muted" style="font-size:0.75rem;">
+            {% if faq.process %}
+            <a href="{% url 'knowledge:process_detail' faq.process.slug %}" class="text-primary">
+              <i class="bi bi-arrow-right-circle me-1"></i>View related process
+            </a>
+            {% endif %}
+            <span><i class="bi bi-hand-thumbs-up me-1"></i>{{ faq.helpful_count }} found helpful</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Pagination -->
+  {% if faqs.has_other_pages %}
+  <nav class="mt-4">
+    <ul class="pagination justify-content-center">
+      {% if faqs.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ faqs.previous_page_number }}{% if selected_module %}&module={{ selected_module }}{% endif %}">Previous</a>
+      </li>
+      {% endif %}
+      <li class="page-item active">
+        <span class="page-link">{{ faqs.number }} / {{ faqs.paginator.num_pages }}</span>
+      </li>
+      {% if faqs.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ faqs.next_page_number }}{% if selected_module %}&module={{ selected_module }}{% endif %}">Next</a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+
+  {% else %}
+  <div class="text-center py-5 text-muted">
+    <i class="bi bi-patch-question fs-1"></i>
+    <p class="mt-2">No FAQs found.</p>
+    {% if request.user.is_admin_or_trainer %}
+    <a href="{% url 'knowledge:faq_create' %}" class="btn btn-outline-primary btn-sm">Add the first FAQ</a>
+    {% else %}
+    <p class="small">Can't find your answer? <a href="{% url 'forum:question_create' %}">Ask in the forum.</a></p>
+    {% endif %}
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

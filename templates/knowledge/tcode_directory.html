@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% block title %}T-Code Directory — SAP Portal{% endblock %}
+{% block content %}
+<div class="p-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+      <h5 class="fw-bold mb-1">T-Code Directory</h5>
+      <p class="text-muted small mb-0">Quick reference for all SAP transaction codes</p>
+    </div>
+    <div class="badge bg-dark fs-6">
+      <i class="bi bi-grid-3x3-gap me-1"></i>{{ tcodes.paginator.count }} T-Codes
+    </div>
+  </div>
+
+  <!-- Search + Filter -->
+  <form method="get" class="row g-2 mb-4">
+    <div class="col-12 col-md-5">
+      <div class="input-group input-group-sm">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input type="text" name="q" class="form-control"
+               placeholder="Enter T-Code or description..." value="{{ query }}">
+      </div>
+    </div>
+    <div class="col-6 col-md-4">
+      <select name="module" class="form-select form-select-sm">
+        <option value="">All Modules</option>
+        {% for mod in modules %}
+        <option value="{{ mod.slug }}" {% if selected_module == mod.slug %}selected{% endif %}>
+          {{ mod.code }} — {{ mod.name }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-6 col-md-3">
+      <button class="btn btn-primary btn-sm w-100" type="submit">Search</button>
+    </div>
+  </form>
+
+  <!-- Module Filter Pills -->
+  <div class="d-flex gap-2 flex-wrap mb-4">
+    <a href="{% url 'knowledge:tcode_directory' %}"
+       class="btn btn-sm {% if not selected_module %}btn-dark{% else %}btn-outline-secondary{% endif %}">
+      All
+    </a>
+    {% for mod in modules %}
+    <a href="?module={{ mod.slug }}"
+       class="btn btn-sm {% if selected_module == mod.slug %}btn-dark{% else %}btn-outline-secondary{% endif %}">
+      {{ mod.code }}
+    </a>
+    {% endfor %}
+  </div>
+
+  <!-- T-Code Table -->
+  <div class="portal-card p-0 overflow-hidden">
+    <table class="table table-hover mb-0 align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th class="ps-3 py-3 small">T-Code</th>
+          <th class="py-3 small">Description</th>
+          <th class="py-3 small">Module</th>
+          <th class="py-3 small">Related Process</th>
+          <th class="py-3 small">Menu Path</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tc in tcodes %}
+        <tr>
+          <td class="ps-3">
+            <span class="badge bg-dark fs-6 font-monospace px-3">{{ tc.t_code }}</span>
+          </td>
+          <td class="small">{{ tc.description }}</td>
+          <td>
+            {% if tc.module %}
+            <a href="{% url 'knowledge:module_detail' tc.module.slug %}"
+               class="badge bg-primary-subtle text-primary text-decoration-none">
+              {{ tc.module.code }}
+            </a>
+            {% else %}
+            <span class="text-muted">—</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if tc.process %}
+            <a href="{% url 'knowledge:process_detail' tc.process.slug %}"
+               class="text-primary text-decoration-none small">
+              {{ tc.process.title|truncatewords:6 }}
+              <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+            {% else %}
+            <span class="text-muted small">—</span>
+            {% endif %}
+          </td>
+          <td class="text-muted small">{{ tc.menu_path|default:"—"|truncatewords:8 }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="text-center text-muted py-5">
+            <i class="bi bi-grid-3x3-gap fs-2 d-block mb-2"></i>
+            No T-Codes found{% if query %} for "{{ query }}"{% endif %}.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  {% if tcodes.has_other_pages %}
+  <nav class="mt-4">
+    <ul class="pagination justify-content-center">
+      {% if tcodes.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ tcodes.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if selected_module %}&module={{ selected_module }}{% endif %}">
+          Previous
+        </a>
+      </li>
+      {% endif %}
+      <li class="page-item active">
+        <span class="page-link">{{ tcodes.number }} / {{ tcodes.paginator.num_pages }}</span>
+      </li>
+      {% if tcodes.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ tcodes.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if selected_module %}&module={{ selected_module }}{% endif %}">
+          Next
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Edit Profile — SAP Portal{% endblock %}
+{% block content %}
+<div class="p-4">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb small">
+      <li class="breadcrumb-item"><a href="{% url 'accounts:profile' %}">My Profile</a></li>
+      <li class="breadcrumb-item active">Edit Profile</li>
+    </ol>
+  </nav>
+
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-7">
+      <div class="portal-card">
+        <h5 class="fw-bold mb-1">Edit Profile</h5>
+        <p class="text-muted small mb-4">Update your personal information and preferences.</p>
+
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="row g-3">
+
+            <div class="col-12 col-md-6">
+              <label class="form-label small fw-semibold">First Name</label>
+              {{ form.first_name }}
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label small fw-semibold">Last Name</label>
+              {{ form.last_name }}
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-semibold">Email</label>
+              {{ form.email }}
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label small fw-semibold">Phone</label>
+              {{ form.phone }}
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label small fw-semibold">Department</label>
+              {{ form.department }}
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-semibold">Bio</label>
+              {{ form.bio }}
+              <div class="form-text">Brief description about yourself (optional)</div>
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-semibold">Profile Picture</label>
+              {% if request.user.profile_picture %}
+                <div class="mb-2">
+                  <img src="{{ request.user.profile_picture.url }}" alt="" style="width:60px;height:60px;object-fit:cover;border-radius:50%;">
+                  <span class="text-muted small ms-2">Current picture</span>
+                </div>
+              {% endif %}
+              {{ form.profile_picture }}
+            </div>
+
+            {% if form.errors %}
+            <div class="col-12">
+              <div class="alert alert-danger small">
+                {% for field in form %}
+                  {% for error in field.errors %}
+                    <div><strong>{{ field.label }}:</strong> {{ error }}</div>
+                  {% endfor %}
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+
+            <div class="col-12 d-flex gap-2 mt-2">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check2 me-1"></i>Save Changes
+              </button>
+              <a href="{% url 'accounts:profile' %}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

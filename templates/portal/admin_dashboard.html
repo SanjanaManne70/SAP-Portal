@@ -1,0 +1,503 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Admin Dashboard — BHEL SAP Portal{% endblock %}
+
+{% block extra_css %}
+<style>
+  .stat-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 1px 4px rgba(0,0,0,.05);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,.09); }
+  .stat-icon {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; flex-shrink: 0;
+  }
+  .stat-num  { font-size: 1.75rem; font-weight: 700; color: #0f172a; line-height: 1; }
+  .stat-lbl  { font-size: .78rem; color: #64748b; margin-top: .15rem; }
+
+  .admin-section { background:#fff; border-radius:14px; border:1px solid #f1f5f9;
+                   padding:1.5rem; box-shadow:0 1px 4px rgba(0,0,0,.05); }
+  .admin-section h6 { font-weight:700; color:#0f172a; font-size:.95rem; margin-bottom:1rem; }
+
+  .upload-tab-btn {
+    padding:.45rem 1.1rem; border-radius:8px; border:1.5px solid #e2e8f0;
+    background:#f8fafc; color:#475569; font-size:.85rem; font-weight:500; cursor:pointer;
+    transition: all .15s;
+  }
+  .upload-tab-btn.active {
+    background:#1d4ed8; color:#fff; border-color:#1d4ed8;
+  }
+  .upload-panel { display:none; }
+  .upload-panel.active { display:block; }
+
+  .user-row { display:flex; align-items:center; gap:.85rem; padding:.6rem 0; border-bottom:1px solid #f1f5f9; }
+  .user-row:last-child { border-bottom:none; }
+  .user-avatar-sm {
+    width:34px; height:34px; border-radius:50%; background:#1d4ed8;
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    font-size:.75rem; font-weight:600; flex-shrink:0;
+  }
+  .user-row-name { font-size:.875rem; font-weight:500; color:#0f172a; }
+  .user-row-meta { font-size:.75rem; color:#64748b; }
+  .role-pill {
+    padding:.2rem .6rem; border-radius:20px; font-size:.72rem; font-weight:600;
+    margin-left:auto; flex-shrink:0;
+  }
+  .role-admin    { background:#fef3c7; color:#d97706; }
+  .role-trainer  { background:#d1fae5; color:#059669; }
+  .role-employee { background:#dbeafe; color:#2563eb; }
+  .role-intern   { background:#f3e8ff; color:#7c3aed; }
+
+  .dept-card {
+    background:#f8fafc; border-radius:10px; padding:.9rem 1.1rem;
+    display:flex; align-items:center; justify-content:space-between;
+    border:1px solid #e2e8f0; margin-bottom:.5rem;
+  }
+  .dept-card-name  { font-weight:600; font-size:.875rem; color:#0f172a; }
+  .dept-card-meta  { font-size:.75rem; color:#64748b; margin-top:.15rem; }
+  .dept-card-badge {
+    background:#eff6ff; color:#2563eb; border-radius:20px;
+    padding:.25rem .7rem; font-size:.75rem; font-weight:600;
+  }
+
+  .template-link {
+    display:inline-flex; align-items:center; gap:.4rem;
+    font-size:.8rem; color:#2563eb; text-decoration:none;
+  }
+  .template-link:hover { text-decoration:underline; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="px-4 py-4">
+
+  <!-- ── PAGE HEADER ─── -->
+  <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+    <div>
+      <h4 class="fw-bold text-dark mb-1">
+        <i class="bi bi-speedometer2 text-primary me-2"></i>Admin Dashboard
+      </h4>
+      <p class="text-muted small mb-0">
+        Full platform overview · {{ request.user.display_name }} · {{ request.user.get_role_display }}
+      </p>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{% url 'knowledge:announcement_create' %}" class="btn btn-sm btn-outline-primary">
+        <i class="bi bi-megaphone me-1"></i>Post Announcement
+      </a>
+      <a href="/admin/" class="btn btn-sm btn-primary">
+        <i class="bi bi-shield-lock me-1"></i>Django Admin
+      </a>
+    </div>
+  </div>
+
+  <!-- ── STATS GRID ─── -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-4 col-lg-2">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#eff6ff;">
+          <i class="bi bi-people text-primary"></i>
+        </div>
+        <div>
+          <div class="stat-num">{{ total_users }}</div>
+          <div class="stat-lbl">Total Users</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#f0fdf4;">
+          <i class="bi bi-diagram-3 text-success"></i>
+        </div>
+        <div>
+          <div class="stat-num">{{ total_processes }}</div>
+          <div class="stat-lbl">Processes</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fef9c3;">
+          <i class="bi bi-file-earmark-text" style="color:#ca8a04;"></i>
+        </div>
+        <div>
+          <div class="stat-num">{{ total_documents }}</div>
+          <div class="stat-lbl">Documents</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fdf2f8;">
+          <i class="bi bi-patch-question text-danger"></i>
+        </div>
+        <div>
+          <div class="stat-num">{{ total_faqs }}</div>
+          <div class="stat-lbl">FAQs</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#f0f9ff;">
+          <i class="bi bi-chat-dots text-info"></i>
+        </div>
+        <div>
+          <div class="stat-num">{{ total_questions }}</div>
+          <div class="stat-lbl">Q&amp;A Posts</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-2">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#faf5ff;">
+          <i class="bi bi-layers" style="color:#7c3aed;"></i>
+        </div>
+        <div>
+          <div class="stat-num">{{ total_modules }}</div>
+          <div class="stat-lbl">SAP Modules</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MAIN GRID ─── -->
+  <div class="row g-4">
+
+    <!-- LEFT: Bulk Upload + Department Overview -->
+    <div class="col-lg-7">
+
+      <!-- ── BULK UPLOAD ── -->
+      <div class="admin-section mb-4">
+        <h6><i class="bi bi-cloud-upload text-primary me-2"></i>Bulk Upload</h6>
+
+        <!-- Tabs -->
+        <div class="d-flex gap-2 mb-3">
+          <button class="upload-tab-btn active" onclick="switchTab(this,'csvPanel')">
+            <i class="bi bi-filetype-csv me-1"></i>CSV Import
+          </button>
+          <button class="upload-tab-btn" onclick="switchTab(this,'docPanel')">
+            <i class="bi bi-file-earmark-arrow-up me-1"></i>Upload Documents
+          </button>
+        </div>
+
+        <!-- CSV Panel -->
+        <div id="csvPanel" class="upload-panel active">
+          <div class="mb-3 p-3 rounded"
+               style="background:#eff6ff;border:1px dashed #bfdbfe;font-size:.82rem;color:#1e40af;">
+            <strong><i class="bi bi-info-circle me-1"></i>Supported formats:</strong><br>
+            <b>Process CSV:</b> title, module_code, description, t_code, difficulty, steps<br>
+            <b>T-Code CSV:</b> t_code, description, module_code, menu_path, notes
+          </div>
+          <form method="POST" action="{% url 'portal:bulk_csv_upload' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label small fw-semibold">Import Type</label>
+                {{ csv_form.upload_type }}
+              </div>
+              <div class="col-md-8">
+                <label class="form-label small fw-semibold">CSV File</label>
+                {{ csv_form.csv_file }}
+              </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-3 flex-wrap gap-2">
+              <div class="d-flex gap-3">
+                <a href="{% url 'portal:csv_template' %}?type=process" class="template-link">
+                  <i class="bi bi-download"></i> Process Template
+                </a>
+                <a href="{% url 'portal:csv_template' %}?type=tcode" class="template-link">
+                  <i class="bi bi-download"></i> T-Code Template
+                </a>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm">
+                <i class="bi bi-upload me-1"></i>Import CSV
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Document Panel -->
+        <div id="docPanel" class="upload-panel">
+          <form method="POST" action="{% url 'portal:bulk_document_upload' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row g-3">
+              <div class="col-md-5">
+                <label class="form-label small fw-semibold">SAP Module</label>
+                {{ doc_form.module }}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-semibold">Document Type</label>
+                {{ doc_form.doc_type }}
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-semibold">Select Files <span class="text-muted">(hold Ctrl/Cmd for multiple)</span></label>
+                {{ doc_form.documents }}
+              </div>
+            </div>
+            <div class="text-end mt-3">
+              <button type="submit" class="btn btn-success btn-sm">
+                <i class="bi bi-cloud-upload me-1"></i>Upload Documents
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ── DEPARTMENT OVERVIEW ── -->
+      <div class="admin-section">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="mb-0"><i class="bi bi-building text-warning me-2"></i>Department Overview</h6>
+          <span class="badge bg-secondary">{{ total_depts }} Departments</span>
+        </div>
+        {% for d in dept_stats %}
+        <div class="dept-card">
+          <div>
+            <div class="dept-card-name">{{ d.dept.name }}</div>
+            <div class="dept-card-meta">
+              Code: <strong>{{ d.dept.code }}</strong>
+              · {{ d.mod_count }} module(s) accessible
+            </div>
+          </div>
+          <div class="dept-card-badge">
+            {{ d.user_count }} user{{ d.user_count|pluralize }}
+          </div>
+        </div>
+        {% empty %}
+        <p class="text-muted small">No departments configured yet. Add them via <a href="/admin/">Django Admin</a>.</p>
+        {% endfor %}
+      </div>
+
+    </div><!-- /col-lg-7 -->
+
+    <!-- RIGHT: Recent Users + Popular Processes -->
+    <div class="col-lg-5">
+
+      <!-- Recent Users -->
+      <div class="admin-section mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="mb-0"><i class="bi bi-people text-primary me-2"></i>Recent Users</h6>
+          <a href="/admin/accounts/customuser/" class="dash-card-link">Manage</a>
+        </div>
+        {% for u in recent_users %}
+        <div class="user-row">
+          <div class="user-avatar-sm">{{ u.initials }}</div>
+          <div>
+            <div class="user-row-name">{{ u.display_name }}</div>
+            <div class="user-row-meta">
+              {{ u.department.name|default:"No dept" }}
+              · Joined {{ u.date_joined|date:"d M Y" }}
+            </div>
+          </div>
+          <span class="role-pill role-{{ u.role }}">{{ u.get_role_display }}</span>
+        </div>
+        {% empty %}
+        <p class="text-muted small">No users yet.</p>
+        {% endfor %}
+      </div>
+
+      <!-- Popular Processes -->
+      <div class="admin-section mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="mb-0"><i class="bi bi-fire text-danger me-2"></i>Popular Processes</h6>
+          <a href="{% url 'knowledge:process_explorer' %}" class="dash-card-link">All</a>
+        </div>
+        <table class="pop-table w-100">
+          <tbody>
+            {% for p in popular_processes %}
+            <tr>
+              <td>
+                <a href="{% url 'knowledge:process_detail' p.slug %}" class="pop-process-link">
+                  {{ p.title|truncatewords:5 }}
+                </a>
+              </td>
+              <td><span class="tcode-tag">{{ p.t_code }}</span></td>
+              <td><span class="mod-tag">{{ p.module.code }}</span></td>
+              <td class="text-muted small">{{ p.view_count }} views</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+<!-- Security Dashboard -->
+<div class="admin-section mb-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h6 class="mb-0">
+      <i class="bi bi-shield-lock text-danger me-2"></i>
+      Security Monitoring
+    </h6>
+
+    <span class="badge bg-success">
+      Protected
+    </span>
+  </div>
+
+  <!-- Security Stats -->
+  <div class="row g-3 mb-3">
+
+    <div class="col-4">
+      <div class="stat-card p-3">
+        <div>
+          <div class="stat-num text-success">
+            92%
+          </div>
+          <div class="stat-lbl">
+            Security Score
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4">
+      <div class="stat-card p-3">
+        <div>
+          <div class="stat-num text-warning">
+            {{ medium_risks }}
+          </div>
+          <div class="stat-lbl">
+            Medium Risks
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4">
+      <div class="stat-card p-3">
+        <div>
+          <div class="stat-num text-danger">
+            {{ high_risks }}
+          </div>
+          <div class="stat-lbl">
+            High Risks
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Vulnerabilities -->
+  <div>
+
+    {% for issue in security_issues %}
+
+    <div class="dept-card">
+
+      <div>
+
+        <div class="dept-card-name">
+          {{ issue.issue_name }}
+        </div>
+
+        <div class="dept-card-meta">
+          {{ issue.affected_url }}
+        </div>
+
+      </div>
+
+      <div>
+
+        {% if issue.risk_level == 'high' %}
+          <span class="badge bg-danger">
+            High
+          </span>
+
+        {% elif issue.risk_level == 'medium' %}
+          <span class="badge bg-warning text-dark">
+            Medium
+          </span>
+
+        {% else %}
+          <span class="badge bg-secondary">
+            Low
+          </span>
+
+        {% endif %}
+
+      </div>
+
+    </div>
+
+    {% empty %}
+
+    <p class="text-muted small">
+      No security vulnerabilities detected.
+    </p>
+
+    {% endfor %}
+
+  </div>
+
+</div>
+      <!-- Announcements -->
+      <div class="admin-section">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="mb-0"><i class="bi bi-megaphone text-success me-2"></i>Announcements</h6>
+          <a href="{% url 'knowledge:announcement_create' %}" class="dash-card-link">+ Add</a>
+        </div>
+        {% for ann in recent_announcements %}
+        <div class="ann-item">
+          <div class="ann-title">{{ ann.title }}</div>
+          <div class="ann-body">{{ ann.body|truncatewords:12 }}</div>
+          <div class="ann-date">{{ ann.created_at|date:"d M Y" }}</div>
+        </div>
+        {% empty %}
+        <p class="text-muted small">No announcements yet.</p>
+        {% endfor %}
+      </div>
+
+    </div><!-- /col-lg-5 -->
+
+  </div><!-- /row -->
+
+  <!-- ── RECENT Q&A ── -->
+  <div class="admin-section mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h6 class="mb-0"><i class="bi bi-chat-dots text-info me-2"></i>Recent Q&amp;A Forum Activity</h6>
+      <a href="{% url 'forum:question_list' %}" class="dash-card-link">View All</a>
+    </div>
+    <div class="qa-list">
+      {% for question in recent_questions %}
+      <div class="qa-item">
+        <a href="{% url 'forum:question_detail' question.pk %}" class="qa-question">
+          {{ question.title }}
+        </a>
+        <div class="qa-meta">
+          <span class="qa-author">{{ question.asked_by.display_name }}</span>
+          <span class="qa-dot">·</span>
+          <span class="qa-time">{{ question.asked_at|timesince }} ago</span>
+          <span class="qa-status {% if question.status == 'answered' %}answered{% else %}pending{% endif %}">
+            {{ question.get_status_display }}
+          </span>
+        </div>
+      </div>
+      {% empty %}
+      <p class="text-muted small text-center py-2">No questions yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+</div><!-- /px-4 -->
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function switchTab(btn, panelId) {
+    document.querySelectorAll('.upload-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.upload-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(panelId).classList.add('active');
+  }
+</script>
+{% endblock %}

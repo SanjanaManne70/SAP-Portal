@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}Process Explorer — BHEL SAP Portal{% endblock %}
+{% block content %}
+<div class="p-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+      <h5 class="fw-bold mb-1">Process Explorer</h5>
+      <p class="text-muted small mb-0">Browse end-to-end SAP business processes</p>
+    </div>
+    {% if request.user.is_admin_or_trainer %}
+    <a href="{% url 'knowledge:process_create' %}" class="btn btn-primary btn-sm">
+      <i class="bi bi-plus-circle me-1"></i>Add Process
+    </a>
+    {% endif %}
+  </div>
+
+  <!-- Module Filter Tabs -->
+  <div class="d-flex gap-2 flex-wrap mb-4">
+    <a href="{% url 'knowledge:process_explorer' %}" class="btn btn-sm {% if not selected_module %}btn-primary{% else %}btn-outline-secondary{% endif %}">All</a>
+    {% for mod in modules %}
+    <a href="?module={{ mod.slug }}" class="btn btn-sm {% if selected_module == mod.slug %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+      {{ mod.code }}
+    </a>
+    {% endfor %}
+  </div>
+
+  <!-- Processes Grid -->
+  <div class="row g-3">
+    {% for process in processes %}
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="portal-card h-100 process-card">
+        <div class="d-flex align-items-start justify-content-between mb-2">
+          <span class="badge bg-primary-subtle text-primary">{{ process.module.code }}</span>
+          {% if process.t_code %}
+          <span class="badge bg-light text-dark border">{{ process.t_code }}</span>
+          {% endif %}
+        </div>
+        <h6 class="fw-semibold mb-2">
+          <a href="{% url 'knowledge:process_detail' process.slug %}" class="text-dark text-decoration-none stretched-link">
+            {{ process.title }}
+          </a>
+        </h6>
+        <p class="text-muted small mb-3">{{ process.description|truncatewords:20 }}</p>
+        <div class="d-flex align-items-center gap-2 mt-auto">
+          <span class="badge {% if process.difficulty == 'beginner' %}bg-success-subtle text-success{% elif process.difficulty == 'intermediate' %}bg-warning-subtle text-warning{% else %}bg-danger-subtle text-danger{% endif %}">
+            {{ process.get_difficulty_display }}
+          </span>
+          <span class="text-muted small ms-auto"><i class="bi bi-eye me-1"></i>{{ process.view_count }}</span>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <div class="text-center py-5 text-muted">
+        <i class="bi bi-diagram-3 fs-1"></i>
+        <p class="mt-2">No processes found. {% if request.user.is_admin_or_trainer %}<a href="{% url 'knowledge:process_create' %}">Add the first one.</a>{% endif %}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Pagination -->
+  {% if processes.has_other_pages %}
+  <nav class="mt-4">
+    <ul class="pagination justify-content-center">
+      {% if processes.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ processes.previous_page_number }}{% if selected_module %}&module={{ selected_module }}{% endif %}">Previous</a></li>{% endif %}
+      <li class="page-item active"><span class="page-link">{{ processes.number }} / {{ processes.paginator.num_pages }}</span></li>
+      {% if processes.has_next %}<li class="page-item"><a class="page-link" href="?page={{ processes.next_page_number }}{% if selected_module %}&module={{ selected_module }}{% endif %}">Next</a></li>{% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+{% endblock %}

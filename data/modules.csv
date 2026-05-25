@@ -1,0 +1,28 @@
+Module Name,Full Form,Department Name,Short Description,Number of Sample Processes,Key Functional Area
+MM,Materials Management,Procurement & Stores,"Handles procurement, inventory management, vendor management, and material movements across plants",18,Procurement & Inventory Control
+FICO,Financial Accounting and Controlling,Finance & Accounts,"Manages financial transactions, cost accounting, budgeting, and financial reporting",20,Financial Management
+SD,Sales and Distribution,Sales & Marketing,"Supports customer order management, shipping, billing, and sales operations",15,Sales Operations
+HR/HCM,Human Resources / Human Capital Management,Human Resources,"Manages employee lifecycle including hiring, payroll, leave, and organizational management",16,Workforce Management
+PM,Plant Maintenance,Maintenance Department,"Supports preventive, corrective, and predictive maintenance activities for industrial assets",14,Asset Maintenance
+QM,Quality Management,Quality Assurance,"Handles inspections, quality notifications, audits, and compliance processes",12,Quality Control
+PP,Production Planning,Manufacturing Department,"Manages production scheduling, MRP, shop floor control, and manufacturing execution",17,Production Planning
+WM,Warehouse Management,Warehouse & Logistics,"Controls warehouse storage, stock transfers, and inventory tracking",10,Warehouse Operations
+EWM,Extended Warehouse Management,Central Logistics,Advanced warehouse automation and goods movement management,11,Supply Chain Logistics
+PS,Project System,Project Management Office,"Manages project planning, budgeting, execution, and monitoring",9,Project Execution
+SCM,Supply Chain Management,Supply Chain Department,"Coordinates procurement, production, inventory, and logistics planning",13,Supply Chain Optimization
+CRM,Customer Relationship Management,Customer Service,"Supports customer engagement, service management, and sales tracking",8,Customer Management
+SRM,Supplier Relationship Management,Vendor Management,"Handles supplier collaboration, sourcing, and procurement analytics",7,Supplier Collaboration
+BASIS,Business Application Software Integrated Solution,IT Infrastructure,"Responsible for SAP system administration, monitoring, and technical operations",6,System Administration
+ABAP,Advanced Business Application Programming,SAP Development Team,"SAP programming language used for custom reports, interfaces, and enhancements",9,SAP Development
+BI/BW,Business Intelligence / Business Warehouse,Business Analytics,"Provides enterprise reporting, dashboards, and analytical data processing",10,Enterprise Analytics
+APO,Advanced Planning and Optimization,Operations Planning,Supports demand planning and supply network optimization,8,Demand Planning
+GRC,Governance Risk and Compliance,Internal Audit & Compliance,"Manages risk assessment, audit controls, and compliance monitoring",6,Risk & Compliance
+EHS,Environment Health and Safety,Safety Department,"Tracks workplace safety, environmental compliance, and incident management",7,Industrial Safety
+DMS,Document Management System,Documentation & Engineering,"Controls engineering drawings, SOPs, and enterprise documents",5,Document Control
+FI,Financial Accounting,Accounts Department,"Handles accounts payable, receivable, asset accounting, and GL operations",14,Accounting Operations
+CO,Controlling,Costing Department,"Supports internal costing, profitability analysis, and budget tracking",11,Cost Control
+PP-PI,Production Planning for Process Industries,Process Manufacturing,Specialized production planning for chemical and process industries,9,Process Manufacturing
+TM,Transportation Management,Logistics Department,"Manages transportation planning, freight, and shipment execution",7,Transportation Logistics
+Ariba,SAP Ariba Procurement Network,Strategic Sourcing,Cloud-based procurement and supplier collaboration platform,6,Strategic Procurement
+,,,,,
+,,,,,

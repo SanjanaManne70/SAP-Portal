@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% block title %}Document Library — SAP Portal{% endblock %}
+{% block content %}
+<div class="p-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+      <h5 class="fw-bold mb-1">Document Library</h5>
+      <p class="text-muted small mb-0">SAP guides, manuals, SOPs and policy documents</p>
+    </div>
+    {% if request.user.is_admin_or_trainer %}
+    <a href="{% url 'knowledge:document_upload' %}" class="btn btn-primary btn-sm">
+      <i class="bi bi-cloud-upload me-1"></i>Upload Document
+    </a>
+    {% endif %}
+  </div>
+
+  <!-- Filters -->
+  <form method="get" class="row g-2 mb-4">
+    <div class="col-12 col-md-4">
+      <input type="text" name="q" class="form-control form-control-sm"
+             placeholder="Search documents..." value="{{ query }}">
+    </div>
+    <div class="col-6 col-md-3">
+      <select name="module" class="form-select form-select-sm">
+        <option value="">All Modules</option>
+        {% for mod in modules %}
+        <option value="{{ mod.slug }}" {% if selected_module == mod.slug %}selected{% endif %}>
+          {{ mod.code }} — {{ mod.name }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-6 col-md-3">
+      <select name="type" class="form-select form-select-sm">
+        <option value="">All Types</option>
+        {% for val, label in doc_types %}
+        <option value="{{ val }}" {% if selected_type == val %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-12 col-md-2">
+      <button class="btn btn-primary btn-sm w-100" type="submit">
+        <i class="bi bi-search me-1"></i>Filter
+      </button>
+    </div>
+  </form>
+
+  <!-- Documents Grid -->
+  <div class="row g-3">
+    {% for doc in documents %}
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="portal-card h-100">
+        <div class="d-flex align-items-start gap-3">
+
+          <!-- File Icon -->
+          <div class="flex-shrink-0 text-center" style="width:44px;">
+            {% if doc.file_extension == 'PDF' %}
+              <i class="bi bi-file-earmark-pdf text-danger fs-2"></i>
+            {% elif doc.file_extension in 'DOC,DOCX' %}
+              <i class="bi bi-file-earmark-word text-primary fs-2"></i>
+            {% elif doc.file_extension in 'XLS,XLSX' %}
+              <i class="bi bi-file-earmark-excel text-success fs-2"></i>
+            {% elif doc.file_extension in 'PPT,PPTX' %}
+              <i class="bi bi-file-earmark-ppt text-warning fs-2"></i>
+            {% else %}
+              <i class="bi bi-file-earmark text-secondary fs-2"></i>
+            {% endif %}
+            <div class="text-muted" style="font-size:0.6rem;">{{ doc.file_extension }}</div>
+          </div>
+
+          <div class="flex-grow-1 min-w-0">
+            <div class="fw-semibold small mb-1 text-dark">{{ doc.title }}</div>
+            {% if doc.description %}
+            <p class="text-muted small mb-2">{{ doc.description|truncatewords:12 }}</p>
+            {% endif %}
+            <div class="d-flex flex-wrap gap-1 mb-2">
+              {% if doc.module %}
+              <span class="badge bg-primary-subtle text-primary">{{ doc.module.code }}</span>
+              {% endif %}
+              <span class="badge bg-light text-dark border">{{ doc.get_doc_type_display }}</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-between">
+              <a href="{% url 'knowledge:document_download' doc.pk %}"
+                 class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-download me-1"></i>Download
+              </a>
+              <div class="text-muted" style="font-size:0.7rem;">
+                <i class="bi bi-arrow-down-circle me-1"></i>{{ doc.download_count }}
+                &nbsp;·&nbsp;
+                {{ doc.uploaded_at|date:"d M Y" }}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <div class="text-center py-5 text-muted">
+        <i class="bi bi-file-earmark-text fs-1"></i>
+        <p class="mt-2">No documents found.</p>
+        {% if request.user.is_admin_or_trainer %}
+        <a href="{% url 'knowledge:document_upload' %}" class="btn btn-outline-primary btn-sm">Upload First Document</a>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Pagination -->
+  {% if documents.has_other_pages %}
+  <nav class="mt-4">
+    <ul class="pagination justify-content-center">
+      {% if documents.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ documents.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if selected_module %}&module={{ selected_module }}{% endif %}">Previous</a>
+      </li>
+      {% endif %}
+      <li class="page-item active">
+        <span class="page-link">{{ documents.number }} / {{ documents.paginator.num_pages }}</span>
+      </li>
+      {% if documents.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ documents.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if selected_module %}&module={{ selected_module }}{% endif %}">Next</a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+
+</div>
+{% endblock %}

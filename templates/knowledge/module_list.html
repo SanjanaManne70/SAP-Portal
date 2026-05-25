@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}SAP Modules — SAP Portal{% endblock %}
+{% block content %}
+<div class="p-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+      <h5 class="fw-bold mb-1">SAP Modules</h5>
+      <p class="text-muted small mb-0">Click a module to explore its processes, documents and FAQs</p>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    {% for module in modules %}
+    <div class="col-12 col-md-6 col-lg-4">
+      <a href="{% url 'knowledge:module_detail' module.slug %}" class="text-decoration-none">
+        <div class="portal-card h-100" style="transition:box-shadow 0.2s,transform 0.2s;cursor:pointer;" onmouseover="this.style.boxShadow='0 6px 24px rgba(0,0,0,0.10)';this.style.transform='translateY(-3px)'" onmouseout="this.style.boxShadow='';this.style.transform=''">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="rounded-circle bg-primary-subtle d-flex align-items-center justify-content-center" style="width:52px;height:52px;flex-shrink:0;">
+              <i class="bi {{ module.icon|default:'bi-grid' }} fs-4 text-primary"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-dark">{{ module.name }}</div>
+              <span class="badge bg-primary">{{ module.code }}</span>
+            </div>
+          </div>
+
+          {% if module.description %}
+          <p class="text-muted small mb-3">{{ module.description|truncatewords:20 }}</p>
+          {% endif %}
+
+          <div class="d-flex gap-4 mt-auto pt-2 border-top">
+            <span class="text-muted small">
+              <i class="bi bi-diagram-3 me-1 text-primary"></i>
+              {{ module.process_count }} Processes
+            </span>
+            <span class="text-muted small">
+              <i class="bi bi-file-earmark me-1 text-success"></i>
+              {{ module.documents.count }} Docs
+            </span>
+            <span class="text-muted small">
+              <i class="bi bi-patch-question me-1 text-warning"></i>
+              {{ module.faqs.count }} FAQs
+            </span>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <div class="text-center py-5 text-muted">
+        <i class="bi bi-layers fs-1"></i>
+        <p class="mt-2">No modules found.</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

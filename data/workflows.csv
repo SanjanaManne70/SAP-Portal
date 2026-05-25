@@ -1,0 +1,66 @@
+workflow_name,step_number,process_name,tcode,previous_step,next_step
+Procure to Pay,1,Create Purchase Requisition,ME51N,NULL,Request for Quotation
+Procure to Pay,2,Request for Quotation,ME41,Create Purchase Requisition,Maintain Vendor Quotation
+Procure to Pay,3,Maintain Vendor Quotation,ME47,Request for Quotation,Quotation Comparison
+Procure to Pay,4,Quotation Comparison,ME49,Maintain Vendor Quotation,Create Purchase Order
+Procure to Pay,5,Create Purchase Order,ME21N,Quotation Comparison,Approve Purchase Order
+Procure to Pay,6,Approve Purchase Order,ME28,Create Purchase Order,Post Goods Receipt
+Procure to Pay,7,Post Goods Receipt,MIGO,Approve Purchase Order,Invoice Verification
+Procure to Pay,8,Invoice Verification,MIRO,Post Goods Receipt,Vendor Payment
+Procure to Pay,9,Vendor Payment,F110,Invoice Verification,NULL
+,,,,,
+Order to Cash,1,Create Customer Master,XD01,NULL,Create Sales Order
+Order to Cash,2,Create Sales Order,VA01,Create Customer Master,Sales Order Approval
+Order to Cash,3,Sales Order Approval,VA02,Create Sales Order,Create Outbound Delivery
+Order to Cash,4,Create Outbound Delivery,VL01N,Sales Order Approval,Post Goods Issue
+Order to Cash,5,Post Goods Issue,VL02N,Create Outbound Delivery,Create Billing Document
+Order to Cash,6,Create Billing Document,VF01,Post Goods Issue,Receive Customer Payment
+Order to Cash,7,Receive Customer Payment,F-28,Create Billing Document,NULL
+,,,,,
+Employee Onboarding,1,Create Organizational Unit,PPOME,NULL,Create Position
+Employee Onboarding,2,Create Position,PPOME,Create Organizational Unit,Hire Employee
+Employee Onboarding,3,Hire Employee,PA40,Create Position,Maintain Employee Master Data
+Employee Onboarding,4,Maintain Employee Master Data,PA30,Hire Employee,Assign Payroll Area
+Employee Onboarding,5,Assign Payroll Area,PA30,Maintain Employee Master Data,Enroll Time Management
+Employee Onboarding,6,Enroll Time Management,CAT2,Assign Payroll Area,Payroll Validation
+Employee Onboarding,7,Payroll Validation,PC00_M40_CALC,Enroll Time Management,NULL
+,,,,,
+Invoice Verification,1,Receive Vendor Invoice,MIRO,NULL,Three Way Match Validation
+Invoice Verification,2,Three Way Match Validation,MIRO,Receive Vendor Invoice,Resolve Invoice Block
+Invoice Verification,3,Resolve Invoice Block,MRBR,Three Way Match Validation,Post Accounting Document
+Invoice Verification,4,Post Accounting Document,FB60,Resolve Invoice Block,Release Payment
+Invoice Verification,5,Release Payment,F110,Post Accounting Document,NULL
+,,,,,
+Vendor Management,1,Create Vendor Master,XK01,NULL,Vendor Data Validation
+Vendor Management,2,Vendor Data Validation,XK02,Create Vendor Master,Vendor Approval
+Vendor Management,3,Vendor Approval,MK01,Vendor Data Validation,Assign Purchasing Organization
+Vendor Management,4,Assign Purchasing Organization,MK02,Vendor Approval,Vendor Performance Evaluation
+Vendor Management,5,Vendor Performance Evaluation,ME61,Assign Purchasing Organization,Vendor Audit
+Vendor Management,6,Vendor Audit,QM01,Vendor Performance Evaluation,NULL
+,,,,,
+Plant Maintenance Workflow,1,Create Maintenance Notification,IW21,NULL,Review Maintenance Request
+Plant Maintenance Workflow,2,Review Maintenance Request,IW22,Create Maintenance Notification,Create Maintenance Order
+Plant Maintenance Workflow,3,Create Maintenance Order,IW31,Review Maintenance Request,Plan Maintenance Activities
+Plant Maintenance Workflow,4,Plan Maintenance Activities,IW32,Create Maintenance Order,Execute Maintenance
+Plant Maintenance Workflow,5,Execute Maintenance,IW41,Plan Maintenance Activities,Close Maintenance Order
+Plant Maintenance Workflow,6,Close Maintenance Order,IW32,Execute Maintenance,NULL
+,,,,,
+Quality Management Workflow,1,Create Inspection Lot,QA01,NULL,Record Inspection Results
+Quality Management Workflow,2,Record Inspection Results,QE51N,Create Inspection Lot,Usage Decision
+Quality Management Workflow,3,Usage Decision,QA11,Record Inspection Results,Create Quality Notification
+Quality Management Workflow,4,Create Quality Notification,QM01,Usage Decision,Corrective Action Processing
+Quality Management Workflow,5,Corrective Action Processing,QM02,Create Quality Notification,Close Quality Notification
+Quality Management Workflow,6,Close Quality Notification,QM03,Corrective Action Processing,NULL
+,,,,,
+Financial Closing Workflow,1,Post General Ledger Entries,FB50,NULL,Reconcile Vendor Accounts
+Financial Closing Workflow,2,Reconcile Vendor Accounts,FBL1N,Post General Ledger Entries,Reconcile Customer Accounts
+Financial Closing Workflow,3,Reconcile Customer Accounts,FBL5N,Reconcile Vendor Accounts,Asset Depreciation Run
+Financial Closing Workflow,4,Asset Depreciation Run,AFAB,Reconcile Customer Accounts,Generate Financial Statements
+Financial Closing Workflow,5,Generate Financial Statements,F.01,Asset Depreciation Run,NULL
+,,,,,
+Inventory Management Workflow,1,Create Material Master,MM01,NULL,Create Storage Location
+Inventory Management Workflow,2,Create Storage Location,OX09,Create Material Master,Goods Receipt Posting
+Inventory Management Workflow,3,Goods Receipt Posting,MIGO,Create Storage Location,Transfer Posting
+Inventory Management Workflow,4,Transfer Posting,MB1B,Goods Receipt Posting,Physical Inventory Count
+Inventory Management Workflow,5,Physical Inventory Count,MI01,Transfer Posting,Inventory Adjustment
+Inventory Management Workflow,6,Inventory Adjustment,MI07,Physical Inventory Count,NULL

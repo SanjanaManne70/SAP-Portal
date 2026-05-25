@@ -1,0 +1,42 @@
+document_title,file_type,module,related_process,category,description,Column7
+,,,,,,file_name
+Procure to Pay SOP Guide,PDF,MM,Procure to Pay,SOP,Standard operating procedure for complete P2P lifecycle,p2p_sop_guide.pdf
+Purchase Requisition Training Manual,PDF,MM,Purchase Requisition,Training,Step-by-step training for creating purchase requisitions,purchase_requisition_training.pdf
+Vendor Onboarding Checklist,DOCX,MM,Vendor Management,Checklist,Checklist for vendor registration and approval,vendor_onboarding_checklist.docx
+RFQ Creation Process Guide,PDF,MM,Request for Quotation,Process Document,Guide for creating and managing RFQs,rfq_creation_process.pdf
+Purchase Order Approval Workflow,PDF,MM,Purchase Order Management,Workflow,Approval hierarchy and PO release strategy documentation,po_approval_workflow.pdf
+Goods Receipt Operations Manual,PDF,MM,Goods Receipt,SOP,Operational process for goods receipt posting,goods_receipt_manual.pdf
+Invoice Verification Training,DOCX,FICO,Invoice Verification,Training,Training material for invoice matching and posting,invoice_verification_training.docx
+Vendor Payment Processing SOP,PDF,FICO,Accounts Payable,SOP,SOP for vendor payment execution using SAP,vendor_payment_sop.pdf
+General Ledger Posting Guide,PDF,FICO,Financial Accounting,Reference Guide,Guide for GL postings and journal entries,gl_posting_guide.pdf
+Month End Financial Closing Checklist,DOCX,FICO,Financial Closing,Checklist,Checklist for month-end financial activities,month_end_closing_checklist.docx
+Asset Accounting User Manual,PDF,FICO,Asset Management,User Manual,Manual for fixed asset accounting procedures,asset_accounting_manual.pdf
+Customer Master Data Governance,PDF,SD,Customer Management,Policy,Customer master creation and governance process,customer_master_governance.pdf
+Sales Order Processing SOP,PDF,SD,Order to Cash,SOP,SOP for sales order lifecycle,sales_order_processing_sop.pdf
+Outbound Delivery Operations,DOCX,SD,Delivery Management,Operations Guide,Guide for outbound delivery processing,outbound_delivery_operations.docx
+Billing and Invoicing Guide,PDF,SD,Billing Process,Training,Training document for billing document creation,billing_invoicing_guide.pdf
+Order to Cash Workflow Diagram,PDF,SD,Order to Cash,Workflow,Visual workflow of O2C business process,otc_workflow_diagram.pdf
+Employee Onboarding Process Manual,PDF,HR,Employee Onboarding,SOP,HR onboarding process for new employees,employee_onboarding_manual.pdf
+Payroll Processing Handbook,PDF,HR,Payroll Management,Handbook,Payroll execution and validation procedures,payroll_processing_handbook.pdf
+Leave Management Policy,DOCX,HR,Leave Management,Policy,Policy document for employee leave management,leave_management_policy.docx
+Time Management User Guide,PDF,HR,Time Management,User Guide,Guide for recording employee attendance,time_management_guide.pdf
+Recruitment Workflow SOP,PDF,HR,Recruitment,SOP,SOP for recruitment and candidate onboarding,recruitment_workflow_sop.pdf
+Maintenance Notification Guide,PDF,Plant Maintenance,Maintenance Notification,Training,Guide for creating maintenance notifications,maintenance_notification_guide.pdf
+Preventive Maintenance Schedule,DOCX,Plant Maintenance,Preventive Maintenance,Schedule,Maintenance scheduling and planning document,preventive_maintenance_schedule.docx
+Equipment Master Data SOP,PDF,Plant Maintenance,Equipment Management,SOP,SOP for equipment master creation,equipment_master_sop.pdf
+Plant Shutdown Maintenance Checklist,PDF,Plant Maintenance,Shutdown Maintenance,Checklist,Checklist for planned plant shutdown activities,shutdown_maintenance_checklist.pdf
+Maintenance Order Execution Manual,PDF,Plant Maintenance,Maintenance Order,Operations Guide,Execution steps for plant maintenance orders,maintenance_order_execution.pdf
+Quality Inspection Process Guide,PDF,Quality Management,Quality Inspection,SOP,Inspection lot creation and processing guide,quality_inspection_process.pdf
+Usage Decision Training Material,DOCX,Quality Management,Usage Decision,Training,Training material for inspection usage decisions,usage_decision_training.docx
+Vendor Quality Audit Checklist,PDF,Quality Management,Vendor Quality Management,Checklist,Checklist for vendor quality audits,vendor_quality_audit_checklist.pdf
+Corrective Action Procedure,PDF,Quality Management,Quality Notification,SOP,SOP for handling quality issues and CAPA,corrective_action_procedure.pdf
+Material Master Data Standards,PDF,MM,Material Master Management,Policy,Enterprise standards for material master records,material_master_standards.pdf
+Inventory Reconciliation SOP,DOCX,MM,Inventory Management,SOP,SOP for inventory reconciliation and adjustments,inventory_reconciliation_sop.docx
+SAP Security Access Policy,PDF,FICO,System Security,Policy,Access control and authorization policy,sap_security_access_policy.pdf
+Business Partner Management Guide,PDF,SD,Business Partner Management,Reference Guide,Guide for managing customer and vendor business partners,business_partner_management_guide.pdf
+Procurement Compliance Handbook,PDF,MM,Procurement Compliance,Handbook,Compliance standards for procurement operations,procurement_compliance_handbook.pdf
+Employee Self Service User Guide,DOCX,HR,ESS Portal,User Guide,Guide for employee self-service portal usage,employee_self_service_guide.docx
+Quality Assurance SOP,PDF,Quality Management,Quality Assurance,SOP,SOP for enterprise quality assurance procedures,quality_assurance_sop.pdf
+Warehouse Operations Manual,PDF,MM,Warehouse Management,Operations Guide,Warehouse stock movement and storage procedures,warehouse_operations_manual.pdf
+Accounts Receivable Process Guide,DOCX,FICO,Accounts Receivable,Training,Guide for managing customer receivables,accounts_receivable_process.docx
+SAP Plant Maintenance KPI Report Template,PDF,Plant Maintenance,Maintenance Analytics,Template,KPI reporting template for maintenance department,pm_kpi_report_template.pdf
