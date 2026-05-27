@@ -5,12 +5,13 @@ OLLAMA_URL = "http://localhost:11434/api/generate"
 
 def ask_ollama(prompt):
 
-    response = requests.post(
-        OLLAMA_URL,
-        json={
-            "model": "mistral",
+    try:
+        response = requests.post(
+            OLLAMA_URL,
+            json={
+                "model": "phi3",
 
-            "prompt": f"""
+                "prompt": f"""
 You are an SAP ERP chatbot assistant.
 
 Rules:
@@ -23,15 +24,27 @@ Question:
 {prompt}
 """,
 
-            "stream": False,
+                "stream": False,
 
-            "options": {
-                "num_predict": 60,
-                "temperature": 0.3
+                "options": {
+                    "num_predict": 60,
+                    "temperature": 0.3
+                }
             }
-        }
-    )
+        )
 
-    data = response.json()
+        data = response.json()
 
-    return data["response"]
+        print("OLLAMA RESPONSE:", data)
+
+        if "response" in data:
+            return data["response"]
+
+        elif "error" in data:
+            return f"Ollama Error: {data['error']}"
+
+        else:
+            return "No valid response received from AI model."
+
+    except Exception as e:
+        return f"Error connecting to Ollama: {str(e)}"
