@@ -6,38 +6,106 @@ function toggleSidebar() {
   document.getElementById('sidebarOverlay').classList.toggle('show');
 }
 
-// ── T-Code popup ──────────────────────────────────
-function openTcode() {
-  document.getElementById('tcodeModal').classList.remove('d-none');
-  document.getElementById('tcodeInput').focus();
+// ── SAP AI CHATBOT ───────────────────────────────
+
+function toggleChatbot() {
+
+  document
+    .getElementById('sapChatWindow')
+    .classList
+    .toggle('d-none');
 }
-function closeTcode() {
-  document.getElementById('tcodeModal').classList.add('d-none');
-  document.getElementById('tcodeResults').innerHTML = '';
+
+
+// Enter key support
+function handleChatEnter(event) {
+
+  if(event.key === 'Enter') {
+    sendChatMessage();
+  }
 }
-function searchTcode() {
-  const q = document.getElementById('tcodeInput').value.trim();
-  if (!q) return;
-  fetch(`/knowledge/tcodes/search/?q=${encodeURIComponent(q)}`)
-    .then(r => r.json())
-    .then(data => {
-      const box = document.getElementById('tcodeResults');
-      if (!data.results.length) {
-        box.innerHTML = '<p class="text-muted small mb-0">No T-Codes found.</p>';
-        return;
-      }
-      box.innerHTML = data.results.map(t => `
-        <div class="d-flex align-items-center gap-2 mb-2">
-          <span class="tcode-tag">${t.t_code}</span>
-          <span class="small">${t.description}</span>
-          <span class="mod-tag ms-auto">${t.module}</span>
-          ${t.process_slug ? `<a href="/knowledge/processes/${t.process_slug}/" class="btn-outline-primary-sm py-0 px-2" style="font-size:0.75rem;">View</a>` : ''}
-        </div>`).join('');
-    });
+
+
+// Send Message
+async function sendChatMessage() {
+
+  const input = document.getElementById('sapChatInput');
+
+  const message = input.value.trim();
+
+  if(!message) return;
+
+  const messagesDiv = document.getElementById('sapChatMessages');
+
+
+  // ── User Message ──
+  messagesDiv.innerHTML += `
+    <div class="user-message">
+      ${message}
+    </div>
+  `;
+
+  input.value = '';
+
+
+  // ── Typing Indicator ──
+  const typingId = 'typing-' + Date.now();
+
+  messagesDiv.innerHTML += `
+    <div class="typing-message" id="${typingId}">
+      SAP AI is typing...
+    </div>
+  `;
+
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+
+  try {
+
+    const response = await fetch(
+      `/chatbot/chat/?message=${encodeURIComponent(message)}`
+    );
+
+    const data = await response.json();
+
+    document.getElementById(typingId)?.remove();
+
+
+    // ── Source Badge ──
+    const sourceBadge =
+      data.source === 'database'
+      ? '📘 Internal SAP'
+      : '🤖 Ollama AI';
+
+
+    // ── Bot Response ──
+    messagesDiv.innerHTML += `
+      <div class="bot-message">
+        ${data.answer}
+
+        <div class="chat-source">
+          ${sourceBadge}
+        </div>
+      </div>
+    `;
+
+  }
+
+  catch(error){
+
+    document.getElementById(typingId)?.remove();
+
+    messagesDiv.innerHTML += `
+      <div class="bot-message">
+        Unable to connect to SAP AI Assistant.
+      </div>
+    `;
+  }
+
+
+  // Auto-scroll
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
-document.getElementById('tcodeInput')?.addEventListener('keydown', e => {
-  if (e.key === 'Enter') searchTcode();
-});
 
 // Close popup on outside click
 document.addEventListener('click', e => {
