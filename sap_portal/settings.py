@@ -3,6 +3,7 @@ Django settings for BHEL SAP Business Processes Portal
 """
 
 from pathlib import Path
+import dj_database_url
 from decouple import config
 import os
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -67,18 +68,9 @@ WSGI_APPLICATION = 'sap_portal.wsgi.application'
 
 # Database - MySQL
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('DB_NAME', default='bhel_sap_db'),
-        'USER': config('DB_USER', default='root'),
-        'PASSWORD': config('DB_PASSWORD', default='sanju@2005'),
-        'HOST': config('DB_HOST', default='localhost'),
-        'PORT': config('DB_PORT', default='3306'),
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
-    }
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL')
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -119,6 +111,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'saanmanne@gmail.com'
-EMAIL_HOST_PASSWORD = 'nizajlyeixwauvou'   # NOT your Gmail login password
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = 'BHEL SAP Portal <saanmanne@gmail.com>'
