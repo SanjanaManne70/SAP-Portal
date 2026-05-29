@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'knowledge',
     'forum',
     'portal',
+    'chatbot',
 ]
 
 MIDDLEWARE = [
